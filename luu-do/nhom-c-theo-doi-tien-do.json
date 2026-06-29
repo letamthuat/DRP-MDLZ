@@ -1,0 +1,19 @@
+{
+  "title": "Theo dõi tiến độ chuyển kho",
+  "lanes": ["Hệ thống (Module)", "Admin FML / Planner MDLZ"],
+  "nodes": [
+    {"id": "start", "lane": 0, "row": 0, "type": "start",   "label": "WMS đang\nthực thi đơn"},
+    {"id": "c1",    "lane": 0, "row": 1, "type": "process", "label": "Bước 1. Định kỳ ~15': lấy thực tế\ntừ WMS theo mã đơn"},
+    {"id": "c2",    "lane": 0, "row": 2, "type": "process", "label": "Bước 2. Đối soát Plan vs Actual\nvới kế hoạch"},
+    {"id": "c3",    "lane": 0, "row": 3, "type": "process", "label": "Bước 3. Tách Complete hệ thống &\nComplete thực tế (Stage Transfer)"},
+    {"id": "c4",    "lane": 0, "row": 4, "type": "process", "label": "Bước 4. Hiển thị dashboard\n& xuất báo cáo"},
+    {"id": "end",   "lane": 1, "row": 5, "type": "end",     "label": "Admin/Planner MDLZ\ntheo dõi"}
+  ],
+  "edges": [
+    {"from": "start", "to": "c1", "label": ""},
+    {"from": "c1", "to": "c2", "label": ""},
+    {"from": "c2", "to": "c3", "label": ""},
+    {"from": "c3", "to": "c4", "label": ""},
+    {"from": "c4", "to": "end", "label": ""}
+  ]
+}

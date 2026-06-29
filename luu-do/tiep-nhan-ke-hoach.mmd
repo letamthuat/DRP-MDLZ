@@ -1,0 +1,10 @@
+# src: tiep-nhan-ke-hoach
+flowchart TD
+    Start([Bắt đầu]) --> B1[B1. Planner MDLZ chọn & tải file kế hoạch lên]
+    B1 --> B2[B2. Hệ thống kiểm tra cấu trúc, cột & định dạng]
+    B2 --> D1{B3. File hợp lệ?}
+    D1 -- Không --> B4[B4. Hệ thống báo lỗi chi tiết dòng/cột]
+    B4 --> B1
+    D1 -- Có --> B5[B5. Hệ thống nhận diện luồng & nhánh từng dòng]
+    B5 --> B6[B6. Hiển thị xem trước & cho phép phân bổ]
+    B6 --> End([Kết thúc: sang bước phân bổ])

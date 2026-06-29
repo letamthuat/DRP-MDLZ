@@ -1,0 +1,4 @@
+Trong bài toán 2 tôi có chức năng khi phân bổ batch xong sẽ chỉ định hàng pick ở vị trí nào nếu 1 batch nằm ở nhiều vị trí.
+Mục đích là gom nhiều SKU x batch thỏa có vị trí gần nhau vào 1 TO để tối ưu.
+Kho MDLZ là kho rack kệ, tôi tính là gắn hệ trục tọa độ x, y rồi tối ưu mà chưa biết tối ưu sao.
+Data vị trí loccation của kho BKD1 là file C:\2. FOR WORK\1. SMARTLOG\9. NEW DRP MDLZ\AS-IS MDLZ BÀI TOÁN 1\1. KHẢO SÁT\Location BKD1.xlsx.

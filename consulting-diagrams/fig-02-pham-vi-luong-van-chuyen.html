@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phạm vi & Luồng Vận Chuyển - Smartlog DRP</title>
+  <!-- Nhúng Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      /* Brand Colors */
+      --color-primary:      #1F2BC9;  /* Xanh dương Smartlog */
+      --color-accent:       #F97316;  /* Cam nhấn mạnh */
+      --color-accent-deep:  #EA580C;  /* Cam đậm */
+      --color-primary-soft: rgba(31, 43, 201, 0.05); /* Xanh nhạt nền */
+      --color-accent-soft:  rgba(249, 115, 22, 0.06);  /* Cam nhạt nền */
+      
+      /* Neutral Colors */
+      --color-bg:           #F8FAFC;  /* Nền trang chính */
+      --color-surface:      #FFFFFF;  /* Nền khối/card */
+      --color-surface-2:    #F1F5F9;  /* Nền phụ */
+      --color-border:       #E2E8F0;  /* Màu đường kẻ chính */
+      --color-border-subtle:#F1F5F9;  /* Màu đường kẻ phụ */
+      
+      /* Text Colors */
+      --color-text-dark:    #0F172A;  /* Chữ chính */
+      --color-text-muted:   #475569;  /* Chữ phụ */
+      --color-text-light:   #94A3B8;  /* Chữ nhạt/chú thích */
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-text-dark);
+      padding: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* Container tối ưu 16:9 */
+    .slide-container {
+      width: 100%;
+      max-width: 1200px;
+      aspect-ratio: 16 / 9;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 16px;
+    }
+
+    .header-titles {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .header-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--color-primary);
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+    }
+
+    .header-subtitle {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-accent);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Main Content Layout */
+    .content-body {
+      flex: 1;
+      display: grid;
+      grid-template-rows: 1.1fr 0.9fr;
+      gap: 16px;
+      padding: 16px 0 8px 0;
+    }
+
+    /* Network Diagram Section */
+    .diagram-area {
+      position: relative;
+      background: #F8FAFC;
+      border-radius: 12px;
+      border: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 48px;
+    }
+
+    /* Node Groups */
+    .node-column {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      z-index: 10;
+    }
+
+    .node-group-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--color-text-light);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-align: center;
+      margin-bottom: -6px;
+    }
+
+    .node-card {
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: 10px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 4px 6px rgba(15, 23, 42, 0.02);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 200px;
+    }
+
+    .node-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(31, 43, 201, 0.08);
+      border-color: var(--color-primary);
+    }
+
+    .node-icon-wrapper {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-primary-soft);
+    }
+
+    .node-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .node-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-text-dark);
+    }
+
+    .node-desc {
+      font-size: 11px;
+      color: var(--color-text-muted);
+    }
+
+    /* Target Nodes specific styles */
+    .node-card.dest-node .node-icon-wrapper {
+      background: var(--color-accent-soft);
+    }
+    .node-card.dest-node:hover {
+      box-shadow: 0 8px 16px rgba(249, 115, 22, 0.08);
+      border-color: var(--color-accent);
+    }
+
+    /* SVG Overlay for Connections */
+    .svg-connections {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .flow-line {
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      transition: all 0.3s ease;
+    }
+
+    .flow-line.in-in {
+      stroke: var(--color-accent);
+      stroke-dasharray: 6, 4;
+    }
+
+    .flow-line.in-ex {
+      stroke: var(--color-primary);
+      stroke-dasharray: 6, 4;
+    }
+
+    .flow-line.backup {
+      stroke: var(--color-primary);
+      stroke-dasharray: 3, 4;
+      opacity: 0.6;
+    }
+
+    /* Highlights on hover */
+    .highlight-in-in .flow-line:not(.in-in),
+    .highlight-in-ex .flow-line:not(.in-ex):not(.backup) {
+      opacity: 0.15;
+    }
+    .highlight-in-in .flow-line.in-in {
+      stroke-width: 3.5;
+      animation: dash 1s linear infinite;
+    }
+    .highlight-in-ex .flow-line.in-ex {
+      stroke-width: 3.5;
+      animation: dash 1s linear infinite;
+    }
+
+    @keyframes dash {
+      to {
+        stroke-dashoffset: -10;
+      }
+    }
+
+    /* Labels inside Diagram */
+    .connection-label {
+      position: absolute;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      transform: translate(-50%, -50%);
+    }
+
+    .label-in-in {
+      top: 25%;
+      left: 50%;
+      color: var(--color-accent-deep);
+      border-color: rgba(249, 115, 22, 0.3);
+      background-color: #FFF7ED;
+    }
+
+    .label-in-ex {
+      top: 75%;
+      left: 50%;
+      color: var(--color-primary);
+      border-color: rgba(31, 43, 201, 0.3);
+      background-color: #EFF6FF;
+    }
+
+    /* Detail Columns Section */
+    .details-area {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .detail-column {
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .detail-column.in-in-col {
+      border-left: 5px solid var(--color-accent);
+    }
+    .detail-column.in-ex-col {
+      border-left: 5px solid var(--color-primary);
+    }
+
+    .detail-column:hover {
+      background: #FAFBFC;
+      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.05);
+    }
+
+    .detail-column.active-col {
+      background: var(--color-surface);
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+    }
+    .detail-column.in-in-col.active-col {
+      border-color: var(--color-accent);
+      background-color: var(--color-accent-soft);
+    }
+    .detail-column.in-ex-col.active-col {
+      border-color: var(--color-primary);
+      background-color: var(--color-primary-soft);
+    }
+
+    .detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .detail-title {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .in-in-col .detail-title { color: var(--color-accent-deep); }
+    .in-ex-col .detail-title { color: var(--color-primary); }
+
+    .flow-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .in-in-col .flow-badge { background: #FFEDD5; color: var(--color-accent-deep); }
+    .in-ex-col .flow-badge { background: #DBEAFE; color: var(--color-primary); }
+
+    .detail-body {
+      font-size: 13px;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .detail-item-box {
+      background: #F8FAFC;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--color-border);
+    }
+
+    .detail-label {
+      font-weight: 700;
+      font-size: 11px;
+      color: var(--color-text-dark);
+      margin-bottom: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .highlight-text {
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+    .in-in-col .highlight-text {
+      color: var(--color-accent-deep);
+    }
+
+    /* Legend / Footer */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--color-border);
+      padding-top: 12px;
+      font-size: 11px;
+      color: var(--color-text-light);
+    }
+
+    .legend {
+      display: flex;
+      gap: 16px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+      color: var(--color-text-muted);
+    }
+
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="slide-container" id="slide">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-titles">
+        <h1 class="header-title">1.1. Phạm vi giải pháp & luồng vận chuyển</h1>
+        <h2 class="header-subtitle">Hai luồng vận hành cốt lõi trên cụm kho BKD và kho NKD</h2>
+      </div>
+      <!-- Logo Smartlog -->
+      <div class="header-logo-container" style="display: flex; align-items: center; gap: 10px;">
+        <div style="display: flex; flex-direction: column; font-family: 'Space Grotesk', sans-serif; text-align: right;">
+          <span style="font-size: 18px; font-weight: bold; color: #1F2BC9; letter-spacing: -0.5px; line-height: 1.1;">smartlog</span>
+          <span style="font-size: 6.5px; font-weight: 600; color: #1F2BC9; text-transform: uppercase; letter-spacing: 0.5px;">Transform Logistics Intelligently</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Body Layout -->
+    <div class="content-body">
+      
+      <!-- Network Diagram Area -->
+      <div class="diagram-area" id="diagramArea">
+        <!-- SVG Connections -->
+        <svg class="svg-connections" id="connectionsSvg">
+          <!-- Markers for Arrowheads -->
+          <defs>
+            <marker id="arrow-accent" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#F97316" />
+            </marker>
+            <marker id="arrow-primary" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#1F2BC9" />
+            </marker>
+          </defs>
+
+          <!-- Flow Lines (Coordinates will be computed on load) -->
+          <!-- In-In line from BKD2/3 to BKD1 -->
+          <path id="path-in-in" class="flow-line in-in" marker-end="url(#arrow-accent)" d="" />
+          <!-- In-Ex line from BKD2/3 to External Warehouse -->
+          <path id="path-in-ex-bkd" class="flow-line in-ex" marker-end="url(#arrow-primary)" d="" />
+          <!-- In-Ex line from NKD to External Warehouse -->
+          <path id="path-in-ex-nkd" class="flow-line in-ex" marker-end="url(#arrow-primary)" d="" />
+          <!-- Backup line from BKD1 to External Warehouse -->
+          <path id="path-backup" class="flow-line backup" marker-end="url(#arrow-primary)" d="" />
+        </svg>
+
+        <!-- Connection Labels -->
+        <div class="connection-label label-in-in">In-In: Chuyển nội bộ</div>
+        <div class="connection-label label-in-ex" style="left: 45%; top: 76%">In-Ex: Ra kho ngoài</div>
+
+        <!-- Node Column 1: Sources -->
+        <div class="node-column">
+          <div class="node-group-label">Kho Nguồn (Cụm BKD)</div>
+          
+          <!-- BKD2 -->
+          <div class="node-card source-node" id="node-bkd2">
+            <div class="node-icon-wrapper">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#1F2BC9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 21h18"></path>
+                <path d="M5 21V8l7-4 7 4v13"></path>
+                <path d="M9 21v-6a3 3 0 0 1 6 0v6"></path>
+              </svg>
+            </div>
+            <div class="node-info">
+              <span class="node-name">BKD2 & BKD3</span>
+              <span class="node-desc">Kho chứa tồn nội bộ</span>
+            </div>
+          </div>
+          
+          <div class="node-group-label" style="margin-top: 4px;">Kho Nguồn Khác</div>
+
+          <!-- NKD -->
+          <div class="node-card source-node" id="node-nkd">
+            <div class="node-icon-wrapper">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#1F2BC9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 20h20"></path>
+                <path d="M5 17V7l4 4V7l4 4V7l7 4v6H5z"></path>
+              </svg>
+            </div>
+            <div class="node-info">
+              <span class="node-name">Kho NKD</span>
+              <span class="node-desc">Kho thành phẩm nhà máy</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Node Column 2: Destinations -->
+        <div class="node-column">
+          <div class="node-group-label">Kho Đích BKD</div>
+          
+          <!-- BKD1 -->
+          <div class="node-card dest-node" id="node-bkd1">
+            <div class="node-icon-wrapper">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#F97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 21h18"></path>
+                <path d="M5 21V8l7-4 7 4v13"></path>
+                <path d="M9 21v-6a3 3 0 0 1 6 0v6"></path>
+              </svg>
+            </div>
+            <div class="node-info">
+              <span class="node-name">BKD1</span>
+              <span class="node-desc">Kho bán hàng chính</span>
+            </div>
+          </div>
+
+          <div class="node-group-label" style="margin-top: 4px;">Kho Ngoài (3PL)</div>
+
+          <!-- Kho Ngoài -->
+          <div class="node-card dest-node" id="node-external">
+            <div class="node-icon-wrapper">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#1F2BC9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+            </div>
+            <div class="node-info">
+              <span class="node-name">Kho Ngoài</span>
+              <span class="node-desc">BEE / ICD / Gemadept</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detail Cards -->
+      <div class="details-area">
+        <!-- Flow In-In -->
+        <div class="detail-column in-in-col" id="col-in-in" onmouseover="activateFlow('in-in')" onmouseout="clearHighlight()">
+          <div class="detail-header">
+            <h3 class="detail-title">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+              Luồng 1: Chuyển nội bộ cụm BKD (In-In)
+            </h3>
+            <span class="flow-badge">Mức độ ưu tiên cao</span>
+          </div>
+          <div class="detail-body">
+            <div class="detail-item-box">
+              <div class="detail-label">Nguồn lấy hàng</div>
+              Lấy từ tồn <span class="highlight-text">BKD2 & BKD3</span>. Xét chung lô tồn khả dụng của cả hai kho để chọn batch.
+            </div>
+            <div class="detail-item-box">
+              <div class="detail-label">Đặc trưng & Ràng buộc</div>
+              Đích nhận là <span class="highlight-text">BKD1</span>. Không tự ý lấy BKD1 làm nguồn (tránh chuyển lặp vòng).
+            </div>
+          </div>
+        </div>
+
+        <!-- Flow In-Ex -->
+        <div class="detail-column in-ex-col" id="col-in-ex" onmouseover="activateFlow('in-ex')" onmouseout="clearHighlight()">
+          <div class="detail-header">
+            <h3 class="detail-title">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+              Luồng 2: Chuyển ra kho ngoài (In-Ex)
+            </h3>
+            <span class="flow-badge">Nhánh BKD & NKD</span>
+          </div>
+          <div class="detail-body">
+            <div class="detail-item-box">
+              <div class="detail-label">Nhánh Cụm BKD</div>
+              Ưu tiên lấy <span class="highlight-text">BKD2 & BKD3</span> (Bậc 1). Dự phòng lấy <span class="highlight-text">BKD1</span> (Bậc 2) qua cổng duyệt hạn dùng.
+            </div>
+            <div class="detail-item-box">
+              <div class="detail-label">Nhánh Kho NKD</div>
+              Nguồn lấy từ kho nhà máy độc lập <span class="highlight-text">NKD</span>. Đích đến là các kho thuê ngoài.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-color" style="background: var(--color-accent);"></div>
+          <span>Luồng In-In (Nội bộ BKD)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: var(--color-primary);"></div>
+          <span>Luồng In-Ex (Xuất kho ngoài)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: var(--color-primary); opacity: 0.6; border: 1px dashed #fff;"></div>
+          <span>Dự phòng BKD1 (Nhánh BKD)</span>
+        </div>
+      </div>
+      <span>Mondelez DRP Solution Blueprint · Visual consulting diagram fig-02</span>
+    </div>
+  </div>
+
+  <script>
+    // Hàm tính toán vẽ các đường cong SVG nối các Node
+    function redrawLines() {
+      const bkd2 = document.getElementById('node-bkd2').getBoundingClientRect();
+      const nkd = document.getElementById('node-nkd').getBoundingClientRect();
+      const bkd1 = document.getElementById('node-bkd1').getBoundingClientRect();
+      const ext = document.getElementById('node-external').getBoundingClientRect();
+      const svg = document.getElementById('connectionsSvg').getBoundingClientRect();
+
+      // Helper tính điểm tương đối trên canvas SVG
+      const getCenterRight = (rect) => ({
+        x: rect.right - svg.left,
+        y: rect.top + rect.height/2 - svg.top
+      });
+      const getCenterLeft = (rect) => ({
+        x: rect.left - svg.left,
+        y: rect.top + rect.height/2 - svg.top
+      });
+
+      const ptBkd2 = getCenterRight(bkd2);
+      const ptNkd = getCenterRight(nkd);
+      const ptBkd1 = getCenterLeft(bkd1);
+      const ptExt = getCenterLeft(ext);
+
+      // 1. Path In-In: BKD2/3 -> BKD1 (Cong nhẹ lên trên)
+      const pathInIn = document.getElementById('path-in-in');
+      const dx1 = ptBkd1.x - ptBkd2.x;
+      const dy1 = ptBkd1.y - ptBkd2.y;
+      pathInIn.setAttribute('d', `M ${ptBkd2.x} ${ptBkd2.y} C ${ptBkd2.x + dx1*0.4} ${ptBkd2.y - 15}, ${ptBkd1.x - dx1*0.4} ${ptBkd1.y - 15}, ${ptBkd1.x} ${ptBkd1.y}`);
+
+      // 2. Path In-Ex BKD: BKD2/3 -> Ext (Cong chéo xuống)
+      const pathInOutBkd = document.getElementById('path-in-ex-bkd');
+      const dx2 = ptExt.x - ptBkd2.x;
+      const dy2 = ptExt.y - ptBkd2.y;
+      pathInOutBkd.setAttribute('d', `M ${ptBkd2.x} ${ptBkd2.y} C ${ptBkd2.x + dx2*0.3} ${ptBkd2.y + 40}, ${ptExt.x - dx2*0.3} ${ptExt.y - 30}, ${ptExt.x} ${ptExt.y}`);
+
+      // 3. Path In-Ex NKD: NKD -> Ext (Ngang thẳng)
+      const pathInOutNkd = document.getElementById('path-in-ex-nkd');
+      const dx3 = ptExt.x - ptNkd.x;
+      const dy3 = ptExt.y - ptNkd.y;
+      pathInOutNkd.setAttribute('d', `M ${ptNkd.x} ${ptNkd.y} C ${ptNkd.x + dx3*0.4} ${ptNkd.y - 10}, ${ptExt.x - dx3*0.4} ${ptExt.y + 10}, ${ptExt.x} ${ptExt.y}`);
+
+      // 4. Path Backup: BKD1 -> Ext (Đường đứt từ BKD1 xuống Ext)
+      const pathBackup = document.getElementById('path-backup');
+      const dx4 = ptExt.x - getCenterRight(bkd1).x;
+      const dy4 = ptExt.y - getCenterRight(bkd1).y;
+      const ptBkd1Right = getCenterRight(bkd1);
+      pathBackup.setAttribute('d', `M ${ptBkd1Right.x} ${ptBkd1Right.y} C ${ptBkd1Right.x + dx4*0.4} ${ptBkd1Right.y + 15}, ${ptExt.x - dx4*0.4} ${ptExt.y - 15}, ${ptExt.x} ${ptExt.y}`);
+    }
+
+    // Xử lý hiệu ứng Hover kích hoạt dòng chảy
+    function activateFlow(flow) {
+      const container = document.getElementById('slide');
+      container.className = 'slide-container';
+      
+      // Xóa active cũ
+      document.getElementById('col-in-in').classList.remove('active-col');
+      document.getElementById('col-in-ex').classList.remove('active-col');
+
+      if (flow === 'in-in') {
+        container.classList.add('highlight-in-in');
+        document.getElementById('col-in-in').classList.add('active-col');
+      } else if (flow === 'in-ex') {
+        container.classList.add('highlight-in-ex');
+        document.getElementById('col-in-ex').classList.add('active-col');
+      }
+    }
+
+    function clearHighlight() {
+      const container = document.getElementById('slide');
+      container.className = 'slide-container';
+      document.getElementById('col-in-in').classList.remove('active-col');
+      document.getElementById('col-in-ex').classList.remove('active-col');
+    }
+
+    // Chạy khi load xong và resize
+    window.addEventListener('load', () => {
+      redrawLines();
+      // Đợi font load xong tính toán lại cho chuẩn tọa độ
+      setTimeout(redrawLines, 500);
+    });
+    window.addEventListener('resize', redrawLines);
+  </script>
+</body>
+</html>

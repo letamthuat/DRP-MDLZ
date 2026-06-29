@@ -1,0 +1,32 @@
+{
+  "title": "5.1. Rà soát, điều chỉnh & chốt phương án phân bổ",
+  "lanes": ["Hệ thống (Module)", "Admin kho FML"],
+  "nodes": [
+    {"id": "r0",  "lane": 0, "row": 0, "type": "start",    "label": "Phân bổ hoàn chỉnh\n(mục 4)"},
+    {"id": "r1",  "lane": 0, "row": 1, "type": "process",  "label": "Bước 1. Hiển thị kết quả phân bổ\ntheo từng dòng kế hoạch"},
+    {"id": "r2",  "lane": 0, "row": 2, "type": "process",  "label": "Bước 2. Tổng hợp cảnh báo (thiếu tồn,\nlô chỉ định, break-FEFO chờ duyệt)"},
+    {"id": "r3",  "lane": 0, "row": 3, "type": "decision", "label": "Bước 3. Cần\nđiều chỉnh?"},
+    {"id": "r4",  "lane": 1, "row": 4, "type": "process",  "label": "Bước 4. Chỉnh lô/kho/số pallet\nhoặc duyệt cổng break-FEFO"},
+    {"id": "r5",  "lane": 1, "row": 5, "type": "process",  "label": "Bước 5. Kiểm tra lại: tồn khả dụng,\ntrạng thái cho phép, giữ tồn"},
+    {"id": "r6",  "lane": 0, "row": 6, "type": "decision", "label": "Bước 6. Còn cảnh\nbáo chặn?"},
+    {"id": "r7",  "lane": 0, "row": 7, "type": "decision", "label": "Bước 7. Bước chốt\nđang bật?"},
+    {"id": "r9",  "lane": 0, "row": 9, "type": "process",  "label": "Bước 9. Khóa phương án,\nghi người & thời điểm chốt"},
+    {"id": "r8",  "lane": 1, "row": 8, "type": "process",  "label": "Bước 8. Người có thẩm quyền\nchốt phương án"},
+    {"id": "r10", "lane": 0, "row": 10, "type": "end",      "label": "Đã chốt & khóa\n→ mục 5.2"}
+  ],
+  "edges": [
+    {"from": "r0", "to": "r1", "label": ""},
+    {"from": "r1", "to": "r2", "label": ""},
+    {"from": "r2", "to": "r3", "label": ""},
+    {"from": "r3", "to": "r4", "label": "Có"},
+    {"from": "r4", "to": "r5", "label": ""},
+    {"from": "r5", "to": "r1", "label": "Sau khi chỉnh"},
+    {"from": "r3", "to": "r6", "label": "Không"},
+    {"from": "r6", "to": "r3", "label": "Còn cảnh báo"},
+    {"from": "r6", "to": "r7", "label": "Hết"},
+    {"from": "r7", "to": "r8", "label": "Bật"},
+    {"from": "r7", "to": "r9", "label": "Tắt (tự chốt)"},
+    {"from": "r8", "to": "r9", "label": ""},
+    {"from": "r9", "to": "r10", "label": ""}
+  ]
+}

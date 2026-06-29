@@ -1,0 +1,23 @@
+{
+  "title": "5.2. Tích hợp đơn xuống WMS & đối soát kết quả",
+  "lanes": ["Hệ thống (Module)", "WMS / Vận hành kho"],
+  "nodes": [
+    {"id": "i0", "lane": 0, "row": 0, "type": "start",    "label": "Đơn TO đã tạo\n(mục 5.1)"},
+    {"id": "i1", "lane": 0, "row": 1, "type": "process",  "label": "Bước 1. Ánh xạ trường đơn & gọi\nAPI tạo đơn xuất trên WMS"},
+    {"id": "i2", "lane": 0, "row": 2, "type": "decision", "label": "Bước 2. WMS nhận\nthành công?"},
+    {"id": "i4", "lane": 1, "row": 3, "type": "process",  "label": "Bước 3. Thử lại có giới hạn; quá\nngưỡng → đánh dấu đơn lỗi tích hợp"},
+    {"id": "i8", "lane": 1, "row": 4, "type": "end",      "label": "Vận hành kiểm tra\n& tích hợp lại"},
+    {"id": "i5", "lane": 0, "row": 5, "type": "process",  "label": "Bước 4. Tra cứu theo mã SO\nlấy ORDER KEY"},
+    {"id": "i6", "lane": 0, "row": 6, "type": "process",  "label": "Bước 5. Lưu liên kết Plan–SO–ORDER KEY\n(đặt trạng thái Đã tích hợp)"},
+    {"id": "i7", "lane": 1, "row": 7, "type": "end",      "label": "WMS thực thi\n(soạn–xuất–nhận)"}
+  ],
+  "edges": [
+    {"from": "i0", "to": "i1", "label": ""},
+    {"from": "i1", "to": "i2", "label": ""},
+    {"from": "i2", "to": "i5", "label": "Có"},
+    {"from": "i5", "to": "i6", "label": ""},
+    {"from": "i6", "to": "i7", "label": ""},
+    {"from": "i2", "to": "i4", "label": "Không"},
+    {"from": "i4", "to": "i8", "label": ""}
+  ]
+}

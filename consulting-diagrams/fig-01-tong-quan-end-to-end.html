@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cấu trúc giải pháp End-to-End - Smartlog DRP</title>
+  <!-- Nhúng Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      /* Brand Colors */
+      --color-primary:      #1F2BC9;  /* Xanh dương Smartlog */
+      --color-accent:       #F97316;  /* Cam nhấn mạnh */
+      --color-accent-deep:  #EA580C;  /* Cam đậm */
+      --color-primary-soft: rgba(31, 43, 201, 0.05); /* Xanh nhạt nền */
+      --color-accent-soft:  rgba(249, 115, 22, 0.05);  /* Cam nhạt nền */
+      
+      /* Neutral Colors */
+      --color-bg:           #F8FAFC;  /* Nền trang chính */
+      --color-surface:      #FFFFFF;  /* Nền khối/card */
+      --color-border:       #E2E8F0;  /* Màu đường kẻ chính */
+      
+      /* Text Colors */
+      --color-text-dark:    #0F172A;  /* Chữ chính */
+      --color-text-muted:   #475569;  /* Chữ phụ */
+      --color-text-light:   #94A3B8;  /* Chữ nhạt/chú thích */
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-text-dark);
+      padding: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Container tối ưu 16:9 - Solid white background */
+    .slide-container {
+      width: 100%;
+      max-width: 1200px;
+      aspect-ratio: 16 / 9;
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+      padding: 20px 28px; /* Tối ưu lại padding cho slide 4 tầng */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 10px;
+      margin-bottom: 4px;
+      z-index: 10;
+    }
+
+    .header-titles {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .header-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-primary);
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+    }
+
+    .header-subtitle {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-accent);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* 4-Tier Architecture Layout */
+    .architecture-body {
+      flex: 1;
+      display: grid;
+      grid-template-rows: 1fr 1fr 1.15fr 1fr;
+      gap: 12px;
+      padding: 6px 0;
+      position: relative;
+    }
+
+    /* SVG Connectors */
+    .svg-connectors {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .connector-line {
+      fill: none;
+      stroke: #CBD5E1;
+      stroke-width: 2px;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: all 0.3s ease;
+    }
+
+    /* Active states with colors & moving dash flows */
+    .connector-line.active {
+      stroke: var(--color-primary);
+      stroke-width: 3px;
+      stroke-dasharray: 6, 4;
+      animation: dashFlow 1s linear infinite;
+    }
+
+    .connector-line.active-purple {
+      stroke: #7C3AED;
+      stroke-width: 3px;
+      stroke-dasharray: 6, 4;
+      animation: dashFlow 1s linear infinite;
+    }
+
+    .connector-line.active-orange {
+      stroke: var(--color-accent);
+      stroke-width: 3px;
+      stroke-dasharray: 6, 4;
+      animation: dashFlow 1s linear infinite;
+    }
+
+    .connector-line.active-green {
+      stroke: #10B981;
+      stroke-width: 3px;
+      stroke-dasharray: 6, 4;
+      animation: dashFlow 1s linear infinite;
+    }
+
+    @keyframes dashFlow {
+      to { stroke-dashoffset: -10; }
+    }
+
+    /* Tiers Container */
+    .tier-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 40px;
+      z-index: 10;
+      align-items: center;
+      position: relative;
+      padding-left: 140px; /* Space for horizontal pill labels */
+      padding-right: 20px;
+    }
+
+    .tier-label {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      
+      /* Horizontal Pill Badge Design */
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: 30px;
+      padding: 5px 12px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+      width: 115px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Tier specific label styles */
+    .tier-setup-label {
+      color: #7C3AED;
+      border-color: rgba(124, 58, 237, 0.25);
+      background-color: rgba(124, 58, 237, 0.05);
+    }
+
+    .tier-input-label {
+      color: var(--color-primary);
+      border-color: rgba(31, 43, 201, 0.25);
+      background-color: var(--color-primary-soft);
+    }
+
+    .tier-engine-label {
+      color: var(--color-accent-deep);
+      border-color: rgba(249, 115, 22, 0.25);
+      background-color: var(--color-accent-soft);
+    }
+
+    .tier-output-label {
+      color: #059669;
+      border-color: rgba(16, 185, 129, 0.25);
+      background-color: rgba(16, 185, 129, 0.05);
+    }
+
+    /* Central Engine container positioning */
+    .tier-row-engine {
+      grid-template-columns: 1fr;
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+      padding-left: 140px;
+      padding-right: 20px;
+      position: relative;
+    }
+
+    /* Cards & Blocks */
+    .arch-card {
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: 12px;
+      padding: 10px 18px; /* Tighter padding for vertical conservation */
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.02);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .arch-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.06);
+    }
+
+    .card-icon-box {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+
+    .arch-card:hover .card-icon-box {
+      transform: scale(1.08);
+    }
+
+    .card-details {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .card-title-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: -0.2px;
+      color: var(--color-text-dark);
+    }
+
+    .badge-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .tech-badge {
+      font-size: 9.5px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--color-bg);
+      color: var(--color-text-muted);
+      border: 1px solid var(--color-border);
+      transition: all 0.25s ease;
+    }
+
+    /* Colors and border styling on hovers */
+    .tier-setup .arch-card:hover { border-color: #7C3AED; }
+    .tier-setup .arch-card:hover .tech-badge { border-color: rgba(124, 58, 237, 0.2); background: rgba(124, 58, 237, 0.05); color: #7C3AED; }
+
+    .tier-input .arch-card:hover { border-color: var(--color-primary); }
+    .tier-input .arch-card:hover .tech-badge { border-color: rgba(31, 43, 201, 0.15); background: var(--color-primary-soft); color: var(--color-primary); }
+    
+    .tier-input .arch-card { border-left: 4px solid var(--color-primary); }
+    .tier-input .card-icon-box { background: var(--color-primary-soft); color: var(--color-primary); }
+
+    /* Tier 2: Core Engine styling */
+    .engine-block {
+      background: var(--color-surface);
+      border: 2px solid var(--color-accent);
+      border-radius: 12px;
+      padding: 10px 20px;
+      box-shadow: 0 4px 15px rgba(249, 115, 22, 0.04);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .engine-block:hover {
+      box-shadow: 0 10px 24px rgba(249, 115, 22, 0.1);
+      transform: translateY(-1px);
+      border-color: var(--color-accent-deep);
+    }
+
+    .engine-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .engine-icon-box {
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
+      background: var(--color-accent-soft);
+      color: var(--color-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s ease;
+    }
+
+    .engine-block:hover .engine-icon-box {
+      transform: scale(1.08) rotate(45deg);
+    }
+
+    .engine-title-wrapper {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .engine-main-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--color-accent-deep);
+      text-transform: uppercase;
+      letter-spacing: -0.3px;
+    }
+
+    .engine-subtitle {
+      font-size: 11px;
+      color: var(--color-text-muted);
+      font-weight: 500;
+    }
+
+    .engine-modules {
+      display: flex;
+      gap: 12px;
+    }
+
+    .engine-mod-card {
+      background: #FAFBFC;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      width: 230px; /* Tăng width để chứa chữ mới không bị chật */
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: all 0.25s ease;
+    }
+
+    .engine-block:hover .engine-mod-card {
+      background: var(--color-surface);
+      border-color: rgba(249, 115, 22, 0.25);
+    }
+
+    .engine-mod-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--color-text-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+    }
+
+    /* Tier 3: Execution & Output styling */
+    .tier-output .arch-card {
+      border-left: 4px solid #10B981;
+    }
+    .tier-output .card-icon-box {
+      background: rgba(16, 185, 129, 0.08);
+      color: #10B981;
+    }
+    .tier-output .arch-card:hover {
+      border-color: #10B981;
+    }
+    .tier-output .arch-card:hover .tech-badge {
+      border-color: rgba(16, 185, 129, 0.2);
+      background-color: rgba(16, 185, 129, 0.05);
+      color: #10B981;
+    }
+
+    /* Footer */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--color-border);
+      padding-top: 8px;
+      font-size: 10.5px;
+      color: var(--color-text-light);
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="slide-container" id="slide">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-titles">
+        <h1 class="header-title">Cấu trúc giải pháp & lưu đồ tổng quan end-to-end</h1>
+        <h2 class="header-subtitle">Kiến trúc dữ liệu 4 tầng: thiết lập, tiếp nhận, xử lý phân bổ và tích hợp đối soát</h2>
+      </div>
+      <!-- Logo Smartlog -->
+      <div class="header-logo-container" style="display: flex; align-items: center; gap: 10px;">
+        <div style="display: flex; flex-direction: column; font-family: 'Space Grotesk', sans-serif; text-align: right;">
+          <span style="font-size: 18px; font-weight: bold; color: #1F2BC9; letter-spacing: -0.5px; line-height: 1.1;">smartlog</span>
+          <span style="font-size: 6.5px; font-weight: 600; color: #1F2BC9; text-transform: uppercase; letter-spacing: 0.5px;">Transform Logistics Intelligently</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4-Tier Architecture Body -->
+    <div class="architecture-body" id="archBody">
+      <!-- SVG Connectors (Orthogonal lines with arrowheads) -->
+      <svg class="svg-connectors" id="connectorsSvg">
+        <!-- Markers for Arrowheads (Auto-rotated by orient="auto") -->
+        <defs>
+          <marker id="arrow-down" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 2 2 L 8 5 L 2 8 z" fill="#CBD5E1" />
+          </marker>
+          <marker id="arrow-right" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 2 2 L 8 5 L 2 8 z" fill="#CBD5E1" />
+          </marker>
+          <marker id="arrow-down-active-purple" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 2 2 L 8 5 L 2 8 z" fill="#7C3AED" />
+          </marker>
+          <marker id="arrow-down-active-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 2 2 L 8 5 L 2 8 z" fill="#1F2BC9" />
+          </marker>
+          <marker id="arrow-down-active-orange" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 2 2 L 8 5 L 2 8 z" fill="#F97316" />
+          </marker>
+          <marker id="arrow-right-active" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 2 2 L 8 5 L 2 8 z" fill="#10B981" />
+          </marker>
+        </defs>
+
+        <!-- Orthogonal lines -->
+        <!-- Tier 0 to Tier 1 -->
+        <path id="line-setup1-input1" class="connector-line" marker-end="url(#arrow-down)" d="" />
+        <path id="line-setup2-input2" class="connector-line" marker-end="url(#arrow-down)" d="" />
+
+        <!-- Tier 1 to Tier 2 -->
+        <path id="line-input1-engine" class="connector-line" marker-end="url(#arrow-down)" d="" />
+        <path id="line-input2-engine" class="connector-line" marker-end="url(#arrow-down)" d="" />
+        
+        <!-- Tier 2 to Tier 3 -->
+        <path id="line-engine-output1" class="connector-line" marker-end="url(#arrow-down)" d="" />
+        <path id="line-engine-output2" class="connector-line" marker-end="url(#arrow-down)" d="" />
+
+        <!-- Tier 3 Output 1 -> Output 2 horizontal flow -->
+        <path id="line-output1-output2" class="connector-line" marker-end="url(#arrow-right)" d="" />
+      </svg>
+
+      <!-- Tier 0: Master Data & System Setup Tier -->
+      <div class="tier-row tier-setup">
+        <div class="tier-label tier-setup-label">Tầng 0: Setup</div>
+        
+        <!-- Card: Master Data -->
+        <div class="arch-card" id="card-setup-master" onmouseover="activatePath('setup1')" onmouseout="deactivatePaths()">
+          <div class="card-icon-box" style="background: rgba(124, 58, 237, 0.08); color: #7C3AED;">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+            </svg>
+          </div>
+          <div class="card-details">
+            <h4 class="card-title-text">Master Data Nền</h4>
+            <div class="badge-container">
+              <span class="tech-badge">Mã SKU quy đổi 3 cấp</span>
+              <span class="tech-badge">Danh mục & Cụm kho</span>
+              <span class="tech-badge">Trạng thái lấy hàng OK</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card: Rules -->
+        <div class="arch-card" id="card-setup-rules" onmouseover="activatePath('setup2')" onmouseout="deactivatePaths()">
+          <div class="card-icon-box" style="background: rgba(124, 58, 237, 0.08); color: #7C3AED;">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </div>
+          <div class="card-details">
+            <h4 class="card-title-text">Tham số & Quy tắc</h4>
+            <div class="badge-container">
+              <span class="tech-badge">Thứ tự ưu tiên bậc nguồn</span>
+              <span class="tech-badge">Ngưỡng tách 100 PALLET</span>
+              <span class="tech-badge">Duyệt hạn dùng BKD1</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tier 1: Input Data Tier -->
+      <div class="tier-row tier-input">
+        <div class="tier-label tier-input-label">Tầng 1: Input</div>
+        
+        <!-- Card: Plan File -->
+        <div class="arch-card" id="card-input-plan" onmouseover="activatePath('input1')" onmouseout="deactivatePaths()">
+          <div class="card-icon-box">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </div>
+          <div class="card-details">
+            <h4 class="card-title-text">Kế hoạch chuyển kho</h4>
+            <div class="badge-container">
+              <span class="tech-badge">Planner MDLZ upload</span>
+              <span class="tech-badge">Auto-validate cấu trúc</span>
+              <span class="tech-badge">Nhận diện luồng/nhánh</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card: WMS Inventory -->
+        <div class="arch-card" id="card-input-inv" onmouseover="activatePath('input2')" onmouseout="deactivatePaths()">
+          <div class="card-icon-box">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+              <path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"></path>
+            </svg>
+          </div>
+          <div class="card-details">
+            <h4 class="card-title-text">Tồn kho khả dụng (WMS)</h4>
+            <div class="badge-container">
+              <span class="tech-badge">Truy vấn lô thực tế API</span>
+              <span class="tech-badge">Lọc trạng thái cho phép</span>
+              <span class="tech-badge">Lấy zone trung chuyển</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tier 2: Central Core Engine -->
+      <div class="tier-row tier-row-engine">
+        <div class="tier-label tier-engine-label">Tầng 2: Engine</div>
+        
+        <div class="engine-block" id="block-engine" onmouseover="activatePath('engine')" onmouseout="deactivatePaths()">
+          <div class="engine-left">
+            <div class="engine-icon-box">
+              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+            </div>
+            <div class="engine-title-wrapper">
+              <h4 class="engine-main-title">Bộ xử lý trung tâm (DRP)</h4>
+              <span class="engine-subtitle">Module phân bổ & tối ưu hóa</span>
+            </div>
+          </div>
+
+          <div class="engine-modules">
+            <!-- Module A -->
+            <div class="engine-mod-card">
+              <span class="engine-mod-title">Phân bổ thông minh</span>
+              <div class="badge-container">
+                <span class="tech-badge" style="color: var(--color-accent-deep)">Chiến thuật FEFO</span>
+                <span class="tech-badge" style="color: var(--color-accent-deep)">Chiến thuật LEFO</span>
+                <span class="tech-badge">Nhập xưởng</span>
+                <span class="tech-badge">Chỉ định lô</span>
+                <span class="tech-badge">Rà soát & Điều chỉnh</span>
+              </div>
+            </div>
+
+            <!-- Module B -->
+            <div class="engine-mod-card">
+              <div class="badge-container">
+                <span class="tech-badge" style="color: var(--color-accent-deep)">Gom SKU gần nhau vào 1 đơn TO</span>
+                <span class="tech-badge">Tách đơn nếu kế hoạch hơn 100 PALLET</span>
+                <span class="tech-badge">Chốt và khóa phương án</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tier 3: Execution & Output Tier -->
+      <div class="tier-row tier-output">
+        <div class="tier-label tier-output-label">Tầng 3: Output</div>
+        
+        <!-- Card: API Integration -->
+        <div class="arch-card" id="card-out-api" onmouseover="activatePath('output1')" onmouseout="deactivatePaths()">
+          <div class="card-icon-box">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+          </div>
+          <div class="card-details">
+            <h4 class="card-title-text">Tích hợp API WMS</h4>
+          </div>
+        </div>
+
+        <!-- Card: Dashboard tracking -->
+        <div class="arch-card" id="card-out-track" onmouseover="activatePath('output2')" onmouseout="deactivatePaths()">
+          <div class="card-icon-box">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="9" y1="9" x2="15" y2="9"></line>
+              <line x1="9" y1="13" x2="15" y2="13"></line>
+              <line x1="9" y1="17" x2="13" y2="17"></line>
+            </svg>
+          </div>
+          <div class="card-details">
+            <h4 class="card-title-text">Dashboard đối soát</h4>
+            <div class="badge-container">
+              <span class="tech-badge">Đồng bộ thực tế ~15'</span>
+              <span class="tech-badge">Tách Stage Transfer</span>
+              <span class="tech-badge">Báo cáo Plan vs Actual</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <span>Giải pháp phân bổ lô hàng & Theo dõi tiến độ chuyển kho MDLZ - FML</span>
+      <span>Mondelez DRP Solution Blueprint · Visual consulting diagram fig-01</span>
+    </div>
+  </div>
+
+  <script>
+    function drawConnectors() {
+      const setup1 = document.getElementById('card-setup-master').getBoundingClientRect();
+      const setup2 = document.getElementById('card-setup-rules').getBoundingClientRect();
+      const in1 = document.getElementById('card-input-plan').getBoundingClientRect();
+      const in2 = document.getElementById('card-input-inv').getBoundingClientRect();
+      const engine = document.getElementById('block-engine').getBoundingClientRect();
+      const out1 = document.getElementById('card-out-api').getBoundingClientRect();
+      const out2 = document.getElementById('card-out-track').getBoundingClientRect();
+      const svg = document.getElementById('connectorsSvg').getBoundingClientRect();
+
+      const getPoint = (rect, edge) => {
+        if (edge === 'bottom') return { x: rect.left + rect.width/2 - svg.left, y: rect.bottom - svg.top };
+        if (edge === 'top') return { x: rect.left + rect.width/2 - svg.left, y: rect.top - svg.top };
+        if (edge === 'left') return { x: rect.left - svg.left, y: rect.top + rect.height/2 - svg.top };
+        if (edge === 'right') return { x: rect.right - svg.left, y: rect.top + rect.height/2 - svg.top };
+      };
+
+      const ptSetup1 = getPoint(setup1, 'bottom');
+      const ptSetup2 = getPoint(setup2, 'bottom');
+      const ptIn1Top = getPoint(in1, 'top');
+      const ptIn2Top = getPoint(in2, 'top');
+
+      const ptIn1 = getPoint(in1, 'bottom');
+      const ptIn2 = getPoint(in2, 'bottom');
+      
+      const engTop = getPoint(engine, 'top');
+      const ptEngTopL = { x: engTop.x - 120, y: engTop.y };
+      const ptEngTopR = { x: engTop.x + 120, y: engTop.y };
+
+      const engBot = getPoint(engine, 'bottom');
+      const ptEngBotL = { x: engBot.x - 120, y: engBot.y };
+      const ptEngBotR = { x: engBot.x + 120, y: engBot.y };
+
+      const ptOut1Top = getPoint(out1, 'top');
+      const ptOut2Top = getPoint(out2, 'top');
+
+      const ptOut1Right = getPoint(out1, 'right');
+      const ptOut2Left = getPoint(out2, 'left');
+
+      // Tính khoảng cách giữa các tầng để vẽ đường vuông góc (Orthogonal)
+      const yMidTier01 = ptSetup1.y + (ptIn1Top.y - ptSetup1.y) * 0.5;
+      const yMidTier12 = ptIn1.y + (ptEngTopL.y - ptIn1.y) * 0.55;
+      const yMidTier23 = ptEngBotL.y + (ptOut1Top.y - ptEngBotL.y) * 0.45;
+
+      // 0. Line Setup 1 -> Input 1
+      const pathSetup1 = document.getElementById('line-setup1-input1');
+      pathSetup1.setAttribute('d', `M ${ptSetup1.x} ${ptSetup1.y} L ${ptSetup1.x} ${yMidTier01} L ${ptIn1Top.x} ${yMidTier01} L ${ptIn1Top.x} ${ptIn1Top.y}`);
+
+      // 0. Line Setup 2 -> Input 2
+      const pathSetup2 = document.getElementById('line-setup2-input2');
+      pathSetup2.setAttribute('d', `M ${ptSetup2.x} ${ptSetup2.y} L ${ptSetup2.x} ${yMidTier01} L ${ptIn2Top.x} ${yMidTier01} L ${ptIn2Top.x} ${ptIn2Top.y}`);
+
+      // 1. Line Input 1 -> Engine Top L
+      const path1 = document.getElementById('line-input1-engine');
+      path1.setAttribute('d', `M ${ptIn1.x} ${ptIn1.y} L ${ptIn1.x} ${yMidTier12} L ${ptEngTopL.x} ${yMidTier12} L ${ptEngTopL.x} ${ptEngTopL.y}`);
+
+      // 2. Line Input 2 -> Engine Top R
+      const path2 = document.getElementById('line-input2-engine');
+      path2.setAttribute('d', `M ${ptIn2.x} ${ptIn2.y} L ${ptIn2.x} ${yMidTier12} L ${ptEngTopR.x} ${yMidTier12} L ${ptEngTopR.x} ${ptEngTopR.y}`);
+
+      // 3. Line Engine Bottom L -> Output 1 Top
+      const path3 = document.getElementById('line-engine-output1');
+      path3.setAttribute('d', `M ${ptEngBotL.x} ${ptEngBotL.y} L ${ptEngBotL.x} ${yMidTier23} L ${ptOut1Top.x} ${yMidTier23} L ${ptOut1Top.x} ${ptOut1Top.y}`);
+
+      // 4. Line Engine Bottom R -> Output 2 Top
+      const path4 = document.getElementById('line-engine-output2');
+      path4.setAttribute('d', `M ${ptEngBotR.x} ${ptEngBotR.y} L ${ptEngBotR.x} ${yMidTier23} L ${ptOut2Top.x} ${yMidTier23} L ${ptOut2Top.x} ${ptOut2Top.y}`);
+
+      // 5. Line Output 1 (API Integration) -> Output 2 (Dashboard) (Ngang nối giữa 2 Output)
+      const path5 = document.getElementById('line-output1-output2');
+      path5.setAttribute('d', `M ${ptOut1Right.x} ${ptOut1Right.y} L ${ptOut2Left.x} ${ptOut2Left.y}`);
+    }
+
+    function activatePath(type) {
+      deactivatePaths();
+
+      if (type === 'setup1') {
+        const line = document.getElementById('line-setup1-input1');
+        line.className = 'connector-line active-purple';
+        line.setAttribute('marker-end', 'url(#arrow-down-active-purple)');
+      } else if (type === 'setup2') {
+        const line = document.getElementById('line-setup2-input2');
+        line.className = 'connector-line active-purple';
+        line.setAttribute('marker-end', 'url(#arrow-down-active-purple)');
+      } else if (type === 'input1') {
+        const line = document.getElementById('line-input1-engine');
+        line.className = 'connector-line active-blue';
+        line.setAttribute('marker-end', 'url(#arrow-down-active-blue)');
+      } else if (type === 'input2') {
+        const line = document.getElementById('line-input2-engine');
+        line.className = 'connector-line active-blue';
+        line.setAttribute('marker-end', 'url(#arrow-down-active-blue)');
+      } else if (type === 'output1') {
+        const line = document.getElementById('line-engine-output1');
+        line.className = 'connector-line active-orange';
+        line.setAttribute('marker-end', 'url(#arrow-down-active-orange)');
+        
+        const lineFlow = document.getElementById('line-output1-output2');
+        lineFlow.className = 'connector-line active-green';
+        lineFlow.setAttribute('marker-end', 'url(#arrow-right-active)');
+      } else if (type === 'output2') {
+        const line = document.getElementById('line-engine-output2');
+        line.className = 'connector-line active-orange';
+        line.setAttribute('marker-end', 'url(#arrow-down-active-orange)');
+        
+        const lineFlow = document.getElementById('line-output1-output2');
+        lineFlow.className = 'connector-line active-green';
+        lineFlow.setAttribute('marker-end', 'url(#arrow-right-active)');
+      } else if (type === 'engine') {
+        document.getElementById('line-setup1-input1').className = 'connector-line active-purple';
+        document.getElementById('line-setup1-input1').setAttribute('marker-end', 'url(#arrow-down-active-purple)');
+        
+        document.getElementById('line-setup2-input2').className = 'connector-line active-purple';
+        document.getElementById('line-setup2-input2').setAttribute('marker-end', 'url(#arrow-down-active-purple)');
+
+        document.getElementById('line-input1-engine').className = 'connector-line active-blue';
+        document.getElementById('line-input1-engine').setAttribute('marker-end', 'url(#arrow-down-active-blue)');
+        
+        document.getElementById('line-input2-engine').className = 'connector-line active-blue';
+        document.getElementById('line-input2-engine').setAttribute('marker-end', 'url(#arrow-down-active-blue)');
+
+        document.getElementById('line-engine-output1').className = 'connector-line active-orange';
+        document.getElementById('line-engine-output1').setAttribute('marker-end', 'url(#arrow-down-active-orange)');
+
+        document.getElementById('line-engine-output2').className = 'connector-line active-orange';
+        document.getElementById('line-engine-output2').setAttribute('marker-end', 'url(#arrow-down-active-orange)');
+
+        document.getElementById('line-output1-output2').className = 'connector-line active-green';
+        document.getElementById('line-output1-output2').setAttribute('marker-end', 'url(#arrow-right-active)');
+      }
+    }
+
+    function deactivatePaths() {
+      document.querySelectorAll('.connector-line').forEach(line => {
+        line.className = 'connector-line';
+        if (line.id === 'line-output1-output2') {
+          line.setAttribute('marker-end', 'url(#arrow-right)');
+        } else {
+          line.setAttribute('marker-end', 'url(#arrow-down)');
+        }
+      });
+    }
+
+    window.addEventListener('load', () => {
+      drawConnectors();
+      setTimeout(drawConnectors, 500);
+    });
+    window.addEventListener('resize', drawConnectors);
+  </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "title": "5.1.2. Gom SKU theo vị trí gần nhau (tối ưu tuyến soạn)",
+  "lanes": ["Hệ thống (Module)"],
+  "nodes": [
+    {"id": "g0", "lane": 0, "row": 0, "type": "start",   "label": "Dòng phân bổ\n(theo nhóm kho)"},
+    {"id": "g1", "lane": 0, "row": 1, "type": "process", "label": "Bước 1. Kế thừa lô đã chọn\ntheo chiến thuật (mục 4)"},
+    {"id": "g2", "lane": 0, "row": 2, "type": "process", "label": "Bước 2. Chọn vị trí lấy: sắp vị trí theo\nlối đi, lấy gọn ở ít điểm dừng nhất"},
+    {"id": "g3", "lane": 0, "row": 3, "type": "process", "label": "Bước 3. Gộp mọi dòng soạn của đợt\n& sắp theo số thứ tự lối đi"},
+    {"id": "g4", "lane": 0, "row": 4, "type": "process", "label": "Bước 4. Cắt đơn theo sức chứa\n(thực hiện ở mục 5.1.1)"},
+    {"id": "g5", "lane": 0, "row": 5, "type": "end",     "label": "Đơn TO: SKU gom gần,\ntheo lộ trình soạn"}
+  ],
+  "edges": [
+    {"from": "g0", "to": "g1", "label": ""},
+    {"from": "g1", "to": "g2", "label": ""},
+    {"from": "g2", "to": "g3", "label": ""},
+    {"from": "g3", "to": "g4", "label": ""},
+    {"from": "g4", "to": "g5", "label": ""}
+  ]
+}

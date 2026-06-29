@@ -1,0 +1,28 @@
+{
+  "title": "4.1. Phân bổ batch theo chiến thuật phân bổ",
+  "lane_w": 560,
+  "row_h": 150,
+  "lanes": ["Hệ thống (Module)"],
+  "nodes": [
+    {"id": "a0",  "lane": 0, "row": 0, "type": "start",    "label": "Một dòng kế hoạch\n(SKU, số pallet)"},
+    {"id": "a1",  "lane": 0, "row": 1, "type": "process",  "label": "Bước 1. Quy đổi số pallet\nsang đơn vị nhỏ nhất"},
+    {"id": "a2",  "lane": 0, "row": 2, "type": "process",  "label": "Bước 2. Lấy tồn theo lô từ WMS\n(các kho thuộc bậc đang xét)"},
+    {"id": "a3",  "lane": 0, "row": 3, "type": "process",  "label": "Bước 3. Lọc trạng thái\n(giữ lô được phép lấy)"},
+    {"id": "a4",  "lane": 0, "row": 4, "type": "process",  "label": "Bước 4. Xếp/lọc lô theo\nchiến thuật của SKU\n(FEFO/LEFO/Nhập xưởng/Chỉ định)"},
+    {"id": "a9",  "lane": 0, "row": 5, "type": "process",  "label": "Bước 5. Lấy cuốn chiếu\ntheo lô đến khi đủ"},
+    {"id": "a10", "lane": 0, "row": 6, "type": "decision", "label": "Bước 6. Đủ\nsố lượng?"},
+    {"id": "a13", "lane": 0, "row": 7, "type": "process",  "label": "Kết quả phân bổ\n(lô, kho, số pallet)"},
+    {"id": "a14", "lane": 0, "row": 8, "type": "end",      "label": "Kết thúc"}
+  ],
+  "edges": [
+    {"from": "a0", "to": "a1", "label": ""},
+    {"from": "a1", "to": "a2", "label": ""},
+    {"from": "a2", "to": "a3", "label": ""},
+    {"from": "a3", "to": "a4", "label": ""},
+    {"from": "a4", "to": "a9", "label": ""},
+    {"from": "a9", "to": "a10", "label": ""},
+    {"from": "a10", "to": "a13", "label": "Có"},
+    {"from": "a10", "to": "a2", "label": "Không"},
+    {"from": "a13", "to": "a14", "label": ""}
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "title": "Tích hợp đơn TO xuống WMS",
+  "lanes": ["Hệ thống (Module)", "WMS / Vận hành kho"],
+  "nodes": [
+    {"id": "start", "lane": 0, "row": 0, "type": "start",    "label": "Đơn TO\nđã tạo"},
+    {"id": "b1",    "lane": 0, "row": 1, "type": "process",  "label": "Bước 1. Ánh xạ trường đơn &\ntích hợp xuống WMS (API)"},
+    {"id": "b2",    "lane": 0, "row": 2, "type": "decision", "label": "Bước 2. WMS nhận\nthành công?"},
+    {"id": "b4",    "lane": 0, "row": 3, "type": "process",  "label": "Bước 3. Lưu liên kết\nPlan – TO – đơn WMS"},
+    {"id": "b5",    "lane": 1, "row": 4, "type": "end",      "label": "WMS thực thi\n(soạn–xuất–lên kệ)"}
+  ],
+  "edges": [
+    {"from": "start", "to": "b1", "label": ""},
+    {"from": "b1", "to": "b2", "label": ""},
+    {"from": "b2", "to": "b1", "label": "Không (báo lỗi & thử lại, chống trùng)"},
+    {"from": "b2", "to": "b4", "label": "Có"},
+    {"from": "b4", "to": "b5", "label": ""}
+  ]
+}

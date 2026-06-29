@@ -1,0 +1,21 @@
+{
+  "title": "5.3. Theo dõi tiến độ chuyển kho (một chu kỳ đồng bộ & đối soát)",
+  "lanes": ["Hệ thống (Module)", "Admin FML / Planner MDLZ"],
+  "nodes": [
+    {"id": "t0", "lane": 0, "row": 0, "type": "start",   "label": "WMS đang thực thi\nđơn (mục 5.2)"},
+    {"id": "t1", "lane": 0, "row": 1, "type": "process", "label": "Bước 1. Định kỳ ~15': lấy thực tế\ntừ WMS theo SO / ORDER KEY"},
+    {"id": "t2", "lane": 0, "row": 2, "type": "process", "label": "Bước 2. Quy về PCS & gắn\nvề đúng dòng kế hoạch"},
+    {"id": "t3", "lane": 0, "row": 3, "type": "process", "label": "Bước 3. Đối soát Actual\nvs Plan"},
+    {"id": "t5", "lane": 0, "row": 4, "type": "process", "label": "Bước 4. Tính tiến độ theo luồng\n(In-In: tách Stage Transfer;\nIn-Ex: tới mốc Đã xuất)"},
+    {"id": "t7", "lane": 0, "row": 5, "type": "process", "label": "Bước 5. Cập nhật dashboard\n& dữ liệu báo cáo"},
+    {"id": "t8", "lane": 1, "row": 6, "type": "end",     "label": "Admin/Planner theo dõi\n& xuất báo cáo"}
+  ],
+  "edges": [
+    {"from": "t0", "to": "t1", "label": ""},
+    {"from": "t1", "to": "t2", "label": ""},
+    {"from": "t2", "to": "t3", "label": ""},
+    {"from": "t3", "to": "t5", "label": ""},
+    {"from": "t5", "to": "t7", "label": ""},
+    {"from": "t7", "to": "t8", "label": ""}
+  ]
+}

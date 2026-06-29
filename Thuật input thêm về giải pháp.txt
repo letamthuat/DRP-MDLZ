@@ -1,0 +1,39 @@
+Trên WMS sẽ quan tâm một số bảng tồn kho, location, đơn hàng nhập, đơn hàng xuất. TÔi có tải dữ liệu từ wms để bạn xem, tôi sẽ note một số trường đặc biệt còn lại bạn tự xem:
+- Tồn kho: C:\2. FOR WORK\1. SMARTLOG\9. NEW DRP MDLZ\AS-IS MDLZ BÀI TOÁN 1\1. KHẢO SÁT\Tồn kho BKD1.xlsx.
++ SKU: này là mặt hàng.
++ STATUS: Đây là trạng thái hàng hóa lưu kho, khi phân bổ batch để chuyển kho thì chỉ có những trang thái nhất định của kho đó là khả dụng để chuyển kho. Trên DRP cần có view setup với kho này thì sẽ lấy những trạng thái nào để chuyển kho.
++ LOC: đây là location - vị trí lưu kho.
++ QTY: đây gọi là tồn onhand, số lượng lưu kho với đơn vị nhỏ nhất, ví dụ một SKU có các đơn vị PCS > CASE > PALLET thì QTY đó đang thể hiện số lượng lưu kho quy đổi về đơn vị nhỏ nhất PCS. Trên DRP khi làm master data SKU sẽ có setup các đơn vị của SKU và quy đổi số lượng giữa các đơn  vị.
++ AVAILABLE: đây là số lượng theo đơn vị nhỏ nhất và đang không bị ghim cho đơn hàng nào, hay gọi là tồn khả dụng
++ LOTTABLE01: đây là số batch mà hệ thống đang nói, bản chất là ngày sản xuất được formt lại.
++ LOTTABLE04: Ngày sản xuất, cho bạn biết chứ DRP không dùng lắm.
++ LOTTABLE05: Hạn sử dụng, cho bạn biết chứ DRP không dùng lắm.
++ SHELF LIFE (%): phần trăm hạn sử dụng còn lại của dòng tồn kho đó, dùng để chạy chiến thuật FEFO, LEFO.
++ LPNID: Gồm 15 ký tự, 10 ký tự đầu tương ứng với mã đơn hàng nhập (RECEIPT KEY), 5 ký tự sau thể hiện dòng chi tiết đơn hàng nhập thứ mấy trong đơn nhập.
++ GENERATED FROM KEY: có data sample BKD3-SO-2600002439, BKD3 là kho xuất là kho 3, SO là đọc từ data shipment order, 2600002439 là ORDER KEY của đơn hàng xuất.
+
+- Đơn hàng nhập: C:\2. FOR WORK\1. SMARTLOG\9. NEW DRP MDLZ\AS-IS MDLZ BÀI TOÁN 1\1. KHẢO SÁT\Đơn hàng nhập BKD1.xlsx.
++ RECEIPT KEY: đơn hàng nhập mà hệ thống WMS tự sinh ra.
++ STATUS: Trạng thái đơn hàng nhập.
++ TYPE: Loại đơn hàng nhập để biết loại nhập chuyển kho, nhập từ nhà máy hay gì đó khác.
+
+- Dữ liệu location: C:\2. FOR WORK\1. SMARTLOG\9. NEW DRP MDLZ\AS-IS MDLZ BÀI TOÁN 1\1. KHẢO SÁT\Location BKD1.xlsx.
++ LOCATION: mã vị trí nằm tương ứng với LOC của tồn kho.
++ PUTAWAYZONE: zone của các loc, khi nói đến hàng cần loại trừ STAGE TRANSFER để biết thực nhập và put-away lên kệ thì phân biệt dựa vào zone này.
+
+- Đơn hàng xuất: C:\2. FOR WORK\1. SMARTLOG\9. NEW DRP MDLZ\AS-IS MDLZ BÀI TOÁN 1\1. KHẢO SÁT\Shipment order BKD2.xlsx.
++ ORDER KEY: mã đơn hàng xuất do WMS tự gen để dịnh danh trên WMS.
++ STATUS: trạng thái đơn xuất hàng.
++ ORDER TYPE: loại đơn xuất.
++ SO: đây là mã đơn xuất chuyển kho do DRP gen ra tíh hợp tạo đơn sang WMS.
+
+Hiện trạng khi tạo đơn chuyển kho sẽ được chia thành 2 luồng với 2 logic xử lý khác nhau:
+- Luồng chuyển kho nội bộ In-In BKD (Từ BKD2/BKD3 --> BKD1):
++ DRP sẽ tích hợp WMS tạo đơn xuất chuyển kho shipment order.
++ Khi nào đơn này xuất sẽ tự động tạo đơn nhập ở kho nhập.
++ Đơn nhập tự động chuyển trạng thái đã nhập.
+- Luồng chuyển kho trong ra kho ngoài In-Ex (từ cụm BKD/ NKD --> kho ngoài)
++ DRP sẽ tích hợp WMS tạo đơn xuất chuyển kho shipment order.
++ Khi nào đơn này xuất sẽ tự động tạo đơn nhập ở kho nhập.
++ Đơn nhập KHÔNG TỰ ĐỘNG chuyển trạng thái nhập, khi nào hàng thực tế được nhập vào kho ngoài, thủ kho bấm nhận hàng trên WMS thì mới chuyển trạng thái nhập cho đơn nhập.
++ ==> Tôi đính chính lại là luồng In-Ex (từ cụm BKD/ NKD --> kho ngoài) sẽ tích hợp giống với In-In BKD (Từ BKD2/BKD3 --> BKD1). Tức là tích hợp xuống WMS tương tự chứ không phải tích hợp qua SAP nữa.

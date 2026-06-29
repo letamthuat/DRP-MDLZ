@@ -1,0 +1,25 @@
+{
+  "title": "Tổng quan end-to-end — Module Phân bổ lô hàng & Theo dõi tiến độ chuyển kho",
+  "lanes": ["Planner MDLZ", "Hệ thống (Module)", "WMS / Vận hành kho"],
+  "nodes": [
+    {"id": "start", "lane": 0, "row": 0, "type": "start",   "label": "Bắt đầu"},
+    {"id": "b0",    "lane": 1, "row": 1, "type": "process", "label": "Bước 1. Thiết lập\nmaster data"},
+    {"id": "b1",    "lane": 0, "row": 2, "type": "process", "label": "Bước 2. Tải file kế hoạch\nlên & kiểm tra hợp lệ"},
+    {"id": "b2",    "lane": 1, "row": 3, "type": "process", "label": "Bước 3. Phân bổ batch theo chiến thuật\n& luồng (duyệt break-FEFO khi cần)"},
+    {"id": "b4",    "lane": 1, "row": 4, "type": "process", "label": "Bước 4. Tạo đơn chuyển kho\n& tích hợp xuống WMS"},
+    {"id": "b5",    "lane": 2, "row": 5, "type": "process", "label": "Bước 5. WMS thực thi: phân bổ\n- soạn - xuất - đưa lên kệ"},
+    {"id": "b6",    "lane": 1, "row": 6, "type": "process", "label": "Bước 6. Lấy thực tế từ WMS\n& đối soát Plan vs Actual"},
+    {"id": "b7",    "lane": 0, "row": 7, "type": "process", "label": "Bước 7. Theo dõi tiến độ\ntrên dashboard"},
+    {"id": "end",   "lane": 0, "row": 8, "type": "end",     "label": "Kết thúc"}
+  ],
+  "edges": [
+    {"from": "start", "to": "b0", "label": ""},
+    {"from": "b0", "to": "b1", "label": ""},
+    {"from": "b1", "to": "b2", "label": ""},
+    {"from": "b2", "to": "b4", "label": ""},
+    {"from": "b4", "to": "b5", "label": ""},
+    {"from": "b5", "to": "b6", "label": ""},
+    {"from": "b6", "to": "b7", "label": ""},
+    {"from": "b7", "to": "end", "label": ""}
+  ]
+}

@@ -1,0 +1,10 @@
+# src: tong-quan-end-to-end
+flowchart TD
+    Start([Bắt đầu: Planner MDLZ tải kế hoạch lên]) --> B1[B1. Tải file kế hoạch lên & kiểm tra hợp lệ]
+    B1 --> B2[B2. Hệ thống phân bổ batch theo chiến thuật & luồng]
+    B2 --> B3[B3. Admin rà soát, điều chỉnh & chốt phương án]
+    B3 --> B4[B4. Hệ thống tạo đơn chuyển kho & đẩy xuống WMS]
+    B4 --> B5[B5. WMS thực thi: phân bổ - soạn - xuất - đưa lên kệ]
+    B5 --> B6[B6. Hệ thống lấy thực tế từ WMS & đối soát Plan vs Actual]
+    B6 --> B7[B7. Admin/Planner MDLZ theo dõi tiến độ trên dashboard]
+    B7 --> End([Kết thúc])

@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cấu Trúc Giải Pháp DRP - Smartlog DRP</title>
+  <!-- Nhúng Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      /* Brand Colors */
+      --color-primary:      #1F2BC9;  /* Xanh dương Smartlog */
+      --color-accent:       #F97316;  /* Cam nhấn mạnh */
+      --color-accent-deep:  #EA580C;  /* Cam đậm */
+      --color-primary-soft: rgba(31, 43, 201, 0.05); /* Xanh nhạt nền */
+      --color-accent-soft:  rgba(249, 115, 22, 0.05);  /* Cam nhạt nền */
+      
+      /* Neutral Colors */
+      --color-bg:           #F8FAFC;  /* Nền trang chính */
+      --color-surface:      #FFFFFF;  /* Nền khối/card */
+      --color-border:       #E2E8F0;  /* Màu đường kẻ chính */
+      
+      /* Text Colors */
+      --color-text-dark:    #0F172A;  /* Chữ chính */
+      --color-text-muted:   #475569;  /* Chữ phụ */
+      --color-text-light:   #94A3B8;  /* Chữ nhạt/chú thích */
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-text-dark);
+      padding: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Background glows for premium consulting depth */
+    .glow-bg-1 {
+      position: absolute;
+      top: -150px;
+      right: -150px;
+      width: 450px;
+      height: 450px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(31, 43, 201, 0.06) 0%, transparent 70%);
+      filter: blur(40px);
+      z-index: 0;
+      pointer-events: none;
+    }
+    .glow-bg-2 {
+      position: absolute;
+      bottom: -150px;
+      left: -150px;
+      width: 450px;
+      height: 450px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(249, 115, 22, 0.05) 0%, transparent 70%);
+      filter: blur(40px);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Container tối ưu 16:9 - Solid white background */
+    .slide-container {
+      width: 100%;
+      max-width: 1200px;
+      aspect-ratio: 16 / 9;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      box-shadow: 0 10px 35px rgba(15, 23, 42, 0.03);
+      padding: 24px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 10px;
+      margin-bottom: 4px;
+    }
+
+    .header-titles {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .header-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-primary);
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+    }
+
+    .header-subtitle {
+      font-family: 'Inter', sans-serif;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--color-accent);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Main Content Layout - 3 columns */
+    .content-body {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding: 16px 0;
+    }
+
+    /* Columns Card design */
+    .function-card {
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: 14px;
+      padding: 20px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.01);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .function-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--color-border);
+      transition: all 0.3s ease;
+    }
+
+    /* Color styles for columns */
+    .card-allocation::before { background: var(--color-accent); }
+    .card-integration::before { background: var(--color-primary); }
+    .card-tracking::before { background: #10B981; }
+
+    .function-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .card-allocation:hover {
+      border-color: rgba(249, 115, 22, 0.3);
+      box-shadow: 0 12px 28px rgba(249, 115, 22, 0.06);
+    }
+    .card-integration:hover {
+      border-color: rgba(31, 43, 201, 0.3);
+      box-shadow: 0 12px 28px rgba(31, 43, 201, 0.06);
+    }
+    .card-tracking:hover {
+      border-color: rgba(16, 185, 129, 0.3);
+      box-shadow: 0 12px 28px rgba(16, 185, 129, 0.06);
+    }
+
+    .card-top {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card-icon-wrapper {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2px;
+      transition: transform 0.3s ease;
+    }
+
+    .function-card:hover .card-icon-wrapper {
+      transform: scale(1.08);
+    }
+
+    .card-allocation .card-icon-wrapper { background: var(--color-accent-soft); color: var(--color-accent); }
+    .card-integration .card-icon-wrapper { background: var(--color-primary-soft); color: var(--color-primary); }
+    .card-tracking .card-icon-wrapper { background: rgba(16, 185, 129, 0.08); color: #10B981; }
+
+    .card-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: -0.2px;
+      line-height: 1.3;
+    }
+    
+    .card-allocation .card-title { color: var(--color-accent-deep); }
+    .card-integration .card-title { color: var(--color-primary); }
+    .card-tracking .card-title { color: #059669; }
+
+    /* Visual Pipeline layout with left accent border */
+    .visual-pipeline {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .visual-step {
+      background: #FAFBFC;
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    /* Assigning left accent border colors on card hovers */
+    .card-allocation .visual-step { border-left: 3px solid rgba(249, 115, 22, 0.3); }
+    .card-integration .visual-step { border-left: 3px solid rgba(31, 43, 201, 0.3); }
+    .card-tracking .visual-step { border-left: 3px solid rgba(16, 185, 129, 0.3); }
+
+    .card-allocation:hover .visual-step { border-left-color: var(--color-accent); }
+    .card-integration:hover .visual-step { border-left-color: var(--color-primary); }
+    .card-tracking:hover .visual-step { border-left-color: #10B981; }
+
+    .function-card:hover .visual-step {
+      background: var(--color-surface);
+      border-color: rgba(15, 23, 42, 0.06);
+      box-shadow: 0 4px 8px rgba(15, 23, 42, 0.02);
+    }
+
+    .step-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: var(--color-text-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .step-desc-text {
+      font-size: 10.5px;
+      color: var(--color-text-muted);
+      line-height: 1.35;
+    }
+
+    /* Choice / Selection chips style */
+    .mini-tags-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    .mini-tag {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2.5px 6px;
+      border-radius: 4px;
+      background: #F1F5F9;
+      color: #64748B;
+      border: 1px solid #E2E8F0;
+      transition: all 0.2s ease;
+    }
+
+    .mini-tag.active-orange {
+      background: #FFF7ED;
+      color: var(--color-accent-deep);
+      border-color: rgba(249, 115, 22, 0.2);
+    }
+
+    .mini-tag.active-blue {
+      background: #EFF6FF;
+      color: var(--color-primary);
+      border-color: rgba(31, 43, 201, 0.15);
+    }
+
+    /* Visual Warehouse Layout for card 1 */
+    .warehouse-grid-visual {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+      background: #F8FAFC;
+      padding: 6px;
+      border-radius: 6px;
+      border: 1px solid var(--color-border);
+      margin-top: 2px;
+    }
+    .aisle-title {
+      grid-column: span 5;
+      font-size: 8px;
+      font-weight: 700;
+      color: #94A3B8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-align: left;
+      margin-bottom: 2px;
+    }
+    .grid-cell {
+      font-size: 8.5px;
+      font-weight: 700;
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      color: #94A3B8;
+      padding: 3px 0;
+      border-radius: 4px;
+      text-align: center;
+    }
+    .grid-cell.picked {
+      background: #FFEDD5;
+      border-color: var(--color-accent);
+      color: var(--color-accent-deep);
+      box-shadow: 0 0 4px rgba(249, 115, 22, 0.15);
+    }
+
+    /* API Bridge with flow particle */
+    .api-bridge-visual {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px 8px;
+      background: #F8FAFC;
+      border-radius: 6px;
+      border: 1px dashed #CBD5E1;
+      margin-top: 2px;
+    }
+
+    .bridge-node {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2.5px 6px;
+      border-radius: 4px;
+      background: #FFFFFF;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+
+    .bridge-arrow-container {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin: 0 8px;
+    }
+
+    .bridge-arrow {
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(to right, var(--color-primary), #94A3B8);
+    }
+
+    .bridge-arrow::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: -3px;
+      width: 0;
+      height: 0;
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
+      border-left: 5px solid #94A3B8;
+    }
+
+    .pulse-point {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      box-shadow: 0 0 6px var(--color-primary);
+      animation: pulseFlow 1.5s infinite linear;
+    }
+
+    @keyframes pulseFlow {
+      0% { left: 0%; opacity: 0; }
+      15% { opacity: 1; }
+      85% { opacity: 1; }
+      100% { left: 90%; opacity: 0; }
+    }
+
+    /* Premium Progress bar representation */
+    .progress-bar-container {
+      display: flex;
+      flex-direction: column;
+      margin-top: 2px;
+    }
+    
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 9.5px;
+      font-weight: 600;
+      color: var(--color-text-muted);
+    }
+
+    .progress-percent {
+      color: #059669;
+      font-weight: 700;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 7px;
+      background: #E2E8F0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 3px;
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, #10B981, #34D399);
+      border-radius: 4px;
+      width: 75%;
+    }
+
+    /* Stage Transfer Pipeline */
+    .stage-path-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #F8FAFC;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--color-border);
+      margin-top: 2px;
+    }
+
+    .stage-path-node {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 9px;
+      font-weight: 700;
+      color: #B45309;
+    }
+
+    .stage-path-node.destination {
+      color: #047857;
+    }
+
+    .node-circle {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: #FEF3C7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      color: #B45309;
+    }
+
+    .stage-path-node.destination .node-circle {
+      background: #D1FAE5;
+      color: #047857;
+    }
+
+    .stage-path-arrow {
+      color: #94A3B8;
+      font-weight: 700;
+      font-size: 10px;
+    }
+
+    /* Technology Tag at bottom of each card */
+    .tech-tag {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      align-self: flex-start;
+      margin-top: 10px;
+    }
+
+    .card-allocation .tech-tag { background: #FFEDD5; color: var(--color-accent-deep); }
+    .card-integration .tech-tag { background: #DBEAFE; color: var(--color-primary); }
+    .card-tracking .tech-tag { background: #D1FAE5; color: #069669; }
+
+    /* Footer */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--color-border);
+      padding-top: 8px;
+      font-size: 10.5px;
+      color: var(--color-text-light);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Decorative blur background bubbles -->
+  <div class="glow-bg-1"></div>
+  <div class="glow-bg-2"></div>
+
+  <div class="slide-container">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-titles">
+        <h1 class="header-title">Ba nhóm chức năng cốt lõi của giải pháp</h1>
+        <h2 class="header-subtitle">Nền tảng nghiệp vụ khép kín từ lập phương án đến đồng bộ & đối soát dữ liệu</h2>
+      </div>
+      <!-- Logo Smartlog -->
+      <div class="header-logo-container" style="display: flex; align-items: center; gap: 10px;">
+        <div style="display: flex; flex-direction: column; font-family: 'Space Grotesk', sans-serif; text-align: right;">
+          <span style="font-size: 18px; font-weight: bold; color: #1F2BC9; letter-spacing: -0.5px; line-height: 1.1;">smartlog</span>
+          <span style="font-size: 6.5px; font-weight: 600; color: #1F2BC9; text-transform: uppercase; letter-spacing: 0.5px;">Transform Logistics Intelligently</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Columns -->
+    <div class="content-body">
+      
+      <!-- Card 1: Allocation & TO Creation -->
+      <div class="function-card card-allocation">
+        <div class="card-top">
+          <div class="card-icon-wrapper">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+              <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+          </div>
+          <h3 class="card-title">Phân bổ batch &<br>Tạo đơn TO tối ưu</h3>
+          
+          <div class="visual-pipeline">
+            <!-- Step 1 -->
+            <div class="visual-step">
+              <span class="step-title">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-accent)"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                Chiến thuật phân bổ lô
+              </span>
+              <div class="mini-tags-group">
+                <span class="mini-tag active-orange">FEFO</span>
+                <span class="mini-tag active-orange">LEFO</span>
+                <span class="mini-tag">Nhập xưởng</span>
+                <span class="mini-tag">Chỉ định lô</span>
+              </div>
+            </div>
+            <!-- Step 2 -->
+            <div class="visual-step">
+              <span class="step-title">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-accent)"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                Tối ưu tuyến soạn hàng
+              </span>
+              <!-- Visual warehouse map with grid picking route -->
+              <div class="warehouse-grid-visual">
+                <div class="aisle-title">Khu A — Dãy kệ 02</div>
+                <div class="grid-cell picked">SKU A</div>
+                <div class="grid-cell picked">SKU B</div>
+                <div class="grid-cell">SKU C</div>
+                <div class="grid-cell">SKU D</div>
+                <div class="grid-cell">SKU E</div>
+              </div>
+              <span class="step-desc-text">Gom SKU ở gần kệ nhau vào chung một đơn TO để tối ưu quãng đường xe nâng soạn hàng.</span>
+            </div>
+            <!-- Step 3 -->
+            <div class="visual-step">
+              <span class="step-title">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-accent)"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+                Ngưỡng &amp; Tách đơn TO
+              </span>
+              <span class="step-desc-text">Hệ thống tự động tách đơn TO khi số lượng vượt ngưỡng <strong>100 PALLET</strong> hoặc tách theo kho nguồn.</span>
+            </div>
+          </div>
+        </div>
+        <div class="tech-tag">Module Logic</div>
+      </div>
+
+      <!-- Card 2: Integration -->
+      <div class="function-card card-integration">
+        <div class="card-top">
+          <div class="card-icon-wrapper">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+          </div>
+          <h3 class="card-title">Tích hợp đơn TO<br>xuống WMS</h3>
+          
+          <div class="visual-pipeline">
+            <!-- Step 1 -->
+            <div class="visual-step">
+              <span class="step-title">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-primary)"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                Đẩy đơn API tự động
+              </span>
+              <!-- Animated API bridge layout -->
+              <div class="api-bridge-visual">
+                <span class="bridge-node" style="color: var(--color-primary)">DRP</span>
+                <div class="bridge-arrow-container">
+                  <div class="bridge-arrow"></div>
+                  <div class="pulse-point"></div>
+                </div>
+                <span class="bridge-node" style="color: var(--color-text-dark)">WMS</span>
+              </div>
+            </div>
+            <!-- Step 2 -->
+            <div class="visual-step">
+              <span class="step-title">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-primary)"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+                Đồng bộ tham số WMS
+              </span>
+              <div class="mini-tags-group">
+                <span class="mini-tag active-blue">✓ SKU</span>
+                <span class="mini-tag active-blue">✓ Mã kho</span>
+                <span class="mini-tag active-blue">✓ Mã lô</span>
+                <span class="mini-tag active-blue">✓ Trạng thái</span>
+              </div>
+            </div>
+            <!-- Step 3 -->
+            <div class="visual-step">
+              <span class="step-title">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-primary)"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                Chống tạo trùng &amp; Retry lỗi
+              </span>
+              <span class="step-desc-text">Cơ chế phát hiện &amp; tự động gửi lại đơn TO API, ngăn ngừa lỗi trùng lặp khi mất mạng.</span>
+            </div>
+          </div>
+        </div>
+        <div class="tech-tag">API Integration</div>
+      </div>
+
+      <!-- Card 3: Tracking -->
+      <div class="function-card card-tracking">
+        <div class="card-top">
+          <div class="card-icon-wrapper">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20v-6M6 20V10M18 20V4"></path>
+            </svg>
+          </div>
+          <h3 class="card-title">Theo dõi tiến độ<br>chuyển kho</h3>
+          
+          <div class="visual-pipeline">
+            <!-- Step 1 -->
+            <div class="visual-step">
+              <span class="step-title">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: #10B981"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                Đối soát Plan vs Actual
+              </span>
+              <!-- Premium Progress indicator -->
+              <div class="progress-bar-container">
+                <div class="progress-labels">
+                  <span>Tiến độ thực tế đơn TO</span>
+                  <span class="progress-percent">75%</span>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill"></div>
+                </div>
+              </div>
+            </div>
+            <!-- Step 2 -->
+            <div class="visual-step">
+              <span class="step-title">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: #10B981"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                Phân tách Stage Transfer
+              </span>
+              <!-- Stage Transfer node visual flow -->
+              <div class="stage-path-container">
+                <div class="stage-path-node">
+                  <div class="node-circle">1</div>
+                  <span>Khu chờ (Stage)</span>
+                </div>
+                <div class="stage-path-arrow">➔</div>
+                <div class="stage-path-node destination">
+                  <div class="node-circle">2</div>
+                  <span>Lên kệ (Putaway)</span>
+                </div>
+              </div>
+            </div>
+            <!-- Step 3 -->
+            <div class="visual-step">
+              <span class="step-title">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: #10B981"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                Realtime Auto-Sync
+              </span>
+              <span class="step-desc-text">Đồng bộ tự động dữ liệu từ WMS mỗi <strong>15 phút</strong>, cập nhật tức thời lên Dashboard trực quan.</span>
+            </div>
+          </div>
+        </div>
+        <div class="tech-tag">Real-time Dashboard</div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <span>Giải pháp phân bổ lô hàng & Theo dõi tiến độ chuyển kho MDLZ - FML</span>
+      <span>Mondelez DRP Solution Blueprint · Visual consulting diagram fig-03</span>
+    </div>
+  </div>
+
+</body>
+</html>

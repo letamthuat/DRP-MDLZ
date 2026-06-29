@@ -1,0 +1,22 @@
+{
+  "title": "3.4. Tiếp nhận & kiểm tra file kế hoạch",
+  "lanes": ["Planner MDLZ", "Hệ thống (Module)"],
+  "nodes": [
+    {"id": "start", "lane": 0, "row": 0, "type": "start",    "label": "Bắt đầu"},
+    {"id": "b1",    "lane": 0, "row": 1, "type": "process",  "label": "Bước 1. Chọn & tải file\nkế hoạch lên"},
+    {"id": "b2",    "lane": 1, "row": 2, "type": "process",  "label": "Bước 2. Kiểm tra cấu trúc,\ncột & định dạng"},
+    {"id": "d1",    "lane": 1, "row": 3, "type": "decision", "label": "Bước 3. File\nhợp lệ?"},
+    {"id": "b4",    "lane": 1, "row": 4, "type": "process",  "label": "Bước 4. Nhận diện luồng\n& nhánh từng dòng"},
+    {"id": "b5",    "lane": 1, "row": 5, "type": "process",  "label": "Bước 5. Xem trước các\ndòng kế hoạch hợp lệ"},
+    {"id": "end",   "lane": 0, "row": 6, "type": "end",      "label": "Kết thúc tiếp nhận\n(chờ phân bổ ở mục 4)"}
+  ],
+  "edges": [
+    {"from": "start", "to": "b1", "label": ""},
+    {"from": "b1", "to": "b2", "label": ""},
+    {"from": "b2", "to": "d1", "label": ""},
+    {"from": "d1", "to": "b1", "label": "Không"},
+    {"from": "d1", "to": "b4", "label": "Có"},
+    {"from": "b4", "to": "b5", "label": ""},
+    {"from": "b5", "to": "end", "label": ""}
+  ]
+}
