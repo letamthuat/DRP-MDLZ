@@ -1,15 +1,15 @@
 {
-  "title": "4.2. Phân bổ theo luồng & nguồn lấy hàng",
+  "title": "Lưu đồ A — Xác định kho lấy & duyệt theo bậc",
   "row_h": 165,
   "lanes": ["Hệ thống (Module)", "Người duyệt (Planner MDLZ)"],
   "nodes": [
     {"id": "s0", "lane": 0, "row": 0, "type": "start",    "label": "Bắt đầu"},
     {"id": "s1", "lane": 0, "row": 1, "type": "process",  "label": "Bước 1. Tra cấu hình nguồn theo luồng\n& loại kho đích"},
     {"id": "s2", "lane": 0, "row": 2, "type": "process",  "label": "Bước 2. Duyệt từng bậc (nhỏ → lớn):\ngộp tồn & chọn lô theo chiến thuật;\nthiếu thì sang bậc kế"},
-    {"id": "s3", "lane": 0, "row": 3, "type": "decision", "label": "Bước 3. Batch BKD1 cũ hơn\ntồn của nhóm BKD2/BKD3?"},
-    {"id": "s4", "lane": 1, "row": 4, "type": "process",  "label": "Bước 4. Gắn cờ break-FEFO,\nchờ Planner MDLZ duyệt"},
+    {"id": "s3", "lane": 0, "row": 3, "type": "decision", "label": "Bước 3. BKD1 còn batch cũ hơn\nlô đã chọn ở BKD2/BKD3?\n(chỉ In-Ex BKD)"},
+    {"id": "s4", "lane": 1, "row": 4, "type": "process",  "label": "Bước 4. Gắn cờ break FEFO,\nchờ Planner MDLZ duyệt"},
     {"id": "s5", "lane": 1, "row": 5, "type": "decision", "label": "Bước 5.\nĐược duyệt?"},
-    {"id": "ok", "lane": 0, "row": 6, "type": "process",  "label": "Phân bổ hoàn chỉnh\n(kèm cờ break-FEFO)"},
+    {"id": "ok", "lane": 0, "row": 6, "type": "process",  "label": "Phân bổ hoàn chỉnh\n(kèm cờ break FEFO)"},
     {"id": "no", "lane": 1, "row": 7, "type": "process",  "label": "Chọn lô khác /\nxử lý thiếu tồn"},
     {"id": "end","lane": 0, "row": 8, "type": "end",      "label": "Kết thúc"}
   ],

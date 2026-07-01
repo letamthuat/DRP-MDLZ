@@ -6,7 +6,7 @@
      style="font-family:Times New Roman, serif">
 <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#444444"/></marker></defs>
 <rect x="0" y="0" width="670" height="48" fill="#176bb4"/>
-<text x="335" y="30" text-anchor="middle" font-family="Times New Roman, serif" font-size="24" font-weight="bold" fill="white">4.2. Phân bổ theo luồng &amp; nguồn lấy hàng</text>
+<text x="335" y="30" text-anchor="middle" font-family="Times New Roman, serif" font-size="24" font-weight="bold" fill="white">Lưu đồ A — Xác định kho lấy &amp; duyệt theo bậc</text>
 <rect x="20" y="48" width="305" height="56" fill="#eef1f5" stroke="none"/>
 <text x="172" y="81" text-anchor="middle" font-family="Times New Roman, serif" font-size="18" font-weight="bold" fill="#222">Hệ thống (Module)</text>
 <rect x="325" y="48" width="305" height="56" fill="#eef1f5" stroke="none"/>
@@ -45,20 +45,21 @@
 <text x="172" y="561" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">chiến thuật;</text>
 <text x="172" y="584" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">thiếu thì sang bậc kế</text>
 <polygon points="172,627 290,697 172,767 54,697" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
-<text x="172" y="668" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">Bước 3. Batch</text>
-<text x="172" y="691" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">BKD1 cũ hơn</text>
-<text x="172" y="714" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">tồn của nhóm</text>
-<text x="172" y="737" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">BKD2/BKD3?</text>
+<text x="172" y="657" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">Bước 3. BKD1 còn</text>
+<text x="172" y="680" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">batch cũ hơn</text>
+<text x="172" y="703" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">lô đã chọn ở</text>
+<text x="172" y="726" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">BKD2/BKD3?</text>
+<text x="172" y="749" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">(chỉ In-Ex BKD)</text>
 <rect x="342" y="800" width="270" height="124" rx="6" ry="6" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
-<text x="477" y="844" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">Bước 4. Gắn cờ</text>
-<text x="477" y="867" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">break-FEFO,</text>
+<text x="477" y="844" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">Bước 4. Gắn cờ break</text>
+<text x="477" y="867" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">FEFO,</text>
 <text x="477" y="890" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">chờ Planner MDLZ duyệt</text>
 <polygon points="477,957 595,1027 477,1097 359,1027" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
 <text x="477" y="1020" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">Bước 5.</text>
 <text x="477" y="1043" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">Được duyệt?</text>
 <rect x="37" y="1130" width="270" height="124" rx="6" ry="6" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
 <text x="172" y="1185" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">Phân bổ hoàn chỉnh</text>
-<text x="172" y="1208" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">(kèm cờ break-FEFO)</text>
+<text x="172" y="1208" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">(kèm cờ break FEFO)</text>
 <rect x="342" y="1295" width="270" height="124" rx="6" ry="6" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
 <text x="477" y="1350" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">Chọn lô khác /</text>
 <text x="477" y="1373" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">xử lý thiếu tồn</text>

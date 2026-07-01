@@ -4,9 +4,9 @@
   "nodes": [
     {"id": "r0",  "lane": 0, "row": 0, "type": "start",    "label": "Phân bổ hoàn chỉnh\n(mục 4)"},
     {"id": "r1",  "lane": 0, "row": 1, "type": "process",  "label": "Bước 1. Hiển thị kết quả phân bổ\ntheo từng dòng kế hoạch"},
-    {"id": "r2",  "lane": 0, "row": 2, "type": "process",  "label": "Bước 2. Tổng hợp cảnh báo (thiếu tồn,\nlô chỉ định, break-FEFO chờ duyệt)"},
+    {"id": "r2",  "lane": 0, "row": 2, "type": "process",  "label": "Bước 2. Tổng hợp cảnh báo (thiếu tồn,\nlô chỉ định, break FEFO chờ duyệt)"},
     {"id": "r3",  "lane": 0, "row": 3, "type": "decision", "label": "Bước 3. Cần\nđiều chỉnh?"},
-    {"id": "r4",  "lane": 1, "row": 4, "type": "process",  "label": "Bước 4. Chỉnh lô/kho/số pallet\nhoặc duyệt cổng break-FEFO"},
+    {"id": "r4",  "lane": 1, "row": 4, "type": "process",  "label": "Bước 4. Chỉnh lô/kho/số pallet\nhoặc duyệt cổng break FEFO"},
     {"id": "r5",  "lane": 1, "row": 5, "type": "process",  "label": "Bước 5. Kiểm tra lại: tồn khả dụng,\ntrạng thái cho phép, giữ tồn"},
     {"id": "r6",  "lane": 0, "row": 6, "type": "decision", "label": "Bước 6. Còn cảnh\nbáo chặn?"},
     {"id": "r7",  "lane": 0, "row": 7, "type": "decision", "label": "Bước 7. Bước chốt\nđang bật?"},

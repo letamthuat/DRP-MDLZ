@@ -1,0 +1,21 @@
+{
+  "title": "Đồng bộ & xem tồn kho từ WMS",
+  "lanes": ["Người dùng / Lịch tự động", "Hệ thống (Module)", "WMS"],
+  "nodes": [
+    {"id": "start", "lane": 0, "row": 0, "type": "start",    "label": "Kích hoạt đồng bộ"},
+    {"id": "t1",    "lane": 0, "row": 1, "type": "process",  "label": "Bước 1. Tự động 15 phút/lần\nhoặc bấm đồng bộ tay"},
+    {"id": "t2",    "lane": 1, "row": 2, "type": "process",  "label": "Bước 2. Gọi API WMS lấy tồn theo lô\ncủa tất cả kho nguồn"},
+    {"id": "t3",    "lane": 2, "row": 3, "type": "process",  "label": "Trả tồn: SKU, lô, vị trí, STATUS,\n% hạn dùng, ngày nhận"},
+    {"id": "t4",    "lane": 1, "row": 4, "type": "process",  "label": "Bước 3. Xác định khả dụng theo\ntrạng thái cho phép của kho (mục 2.1)"},
+    {"id": "t5",    "lane": 1, "row": 5, "type": "process",  "label": "Bước 4. Cập nhật bản tồn (snapshot)\n& ghi mốc đồng bộ lần cuối"},
+    {"id": "end",   "lane": 1, "row": 6, "type": "end",      "label": "Phân bổ (mục 4)\ndùng bản tồn này"}
+  ],
+  "edges": [
+    {"from": "start", "to": "t1", "label": ""},
+    {"from": "t1", "to": "t2", "label": ""},
+    {"from": "t2", "to": "t3", "label": ""},
+    {"from": "t3", "to": "t4", "label": ""},
+    {"from": "t4", "to": "t5", "label": ""},
+    {"from": "t5", "to": "end", "label": ""}
+  ]
+}

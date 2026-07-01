@@ -1,0 +1,30 @@
+{
+  "title": "Logic phân bổ lô theo luồng & chiến thuật",
+  "lanes": ["Hệ thống (Module)", "Người dùng (Planner MDLZ)"],
+  "nodes": [
+    {"id": "start", "lane": 0, "row": 0, "type": "start",    "label": "Dòng kế hoạch\n(SKU, số lượng + đơn vị)"},
+    {"id": "n1",    "lane": 0, "row": 1, "type": "process",  "label": "Bước 1. Xác định kho lấy theo luồng\n(bậc ưu tiên & kho mỗi bậc — mục 2.4)"},
+    {"id": "n2",    "lane": 0, "row": 2, "type": "process",  "label": "Bước 2. Chọn lô ở bậc ưu tiên cao nhất\ntheo chiến thuật; thiếu thì sang bậc kế"},
+    {"id": "d1",    "lane": 0, "row": 3, "type": "decision", "label": "Đủ tồn\nqua các bậc?"},
+    {"id": "d2",    "lane": 0, "row": 4, "type": "decision", "label": "BKD1 còn batch\ncũ hơn?\n(chỉ In-Ex BKD)"},
+    {"id": "f",     "lane": 1, "row": 5, "type": "process",  "label": "Cảnh báo break FEFO,\nchờ Planner duyệt"},
+    {"id": "d3",    "lane": 1, "row": 6, "type": "decision", "label": "Được duyệt?"},
+    {"id": "alt",   "lane": 1, "row": 7, "type": "process",  "label": "Chọn lô khác"},
+    {"id": "ok",    "lane": 0, "row": 7, "type": "process",  "label": "Phân bổ hoàn chỉnh"},
+    {"id": "end",   "lane": 0, "row": 8, "type": "end",      "label": "Kết thúc"}
+  ],
+  "edges": [
+    {"from": "start", "to": "n1", "label": ""},
+    {"from": "n1", "to": "n2", "label": ""},
+    {"from": "n2", "to": "d1", "label": ""},
+    {"from": "d1", "to": "d2", "label": "Có"},
+    {"from": "d1", "to": "end", "label": "Không", "route": "left"},
+    {"from": "d2", "to": "ok", "label": "Không"},
+    {"from": "d2", "to": "f", "label": "Có"},
+    {"from": "f", "to": "d3", "label": ""},
+    {"from": "d3", "to": "ok", "label": "Được"},
+    {"from": "d3", "to": "alt", "label": "Từ chối"},
+    {"from": "alt", "to": "ok", "label": "", "no_arrow": true},
+    {"from": "ok", "to": "end", "label": ""}
+  ]
+}

@@ -1,21 +1,20 @@
 {
   "title": "5.1.1. Tạo & tách đơn chuyển kho (TO)",
   "lanes": ["Hệ thống (Module)"],
+  "lane_w": 440,
   "nodes": [
     {"id": "s0", "lane": 0, "row": 0, "type": "start",   "label": "Kết quả phân bổ\n(mục 4)"},
     {"id": "s1", "lane": 0, "row": 1, "type": "process", "label": "Bước 1. Gom dòng phân bổ theo\n(luồng, kho nguồn, kho đích)"},
     {"id": "s2", "lane": 0, "row": 2, "type": "process", "label": "Bước 2. Gom SKU theo vị trí\ngần nhau (mục 5.1.2)"},
     {"id": "s3", "lane": 0, "row": 3, "type": "process", "label": "Bước 3. Tách nhóm thành nhiều đơn\nnếu vượt ngưỡng pallet mỗi đơn (mục 2.3)"},
-    {"id": "s6", "lane": 0, "row": 4, "type": "process", "label": "Bước 4. Sinh mã đơn (SO)\nduy nhất"},
-    {"id": "s7", "lane": 0, "row": 5, "type": "process", "label": "Bước 5. Lưu đơn TO &\nliên kết Plan – TO"},
-    {"id": "s8", "lane": 0, "row": 6, "type": "end",     "label": "Tập đơn TO sẵn sàng\n→ mục 5.2 tích hợp xuống WMS"}
+    {"id": "s7", "lane": 0, "row": 4, "type": "process", "label": "Bước 4. Lưu đơn TO &\nliên kết Plan – TO"},
+    {"id": "s8", "lane": 0, "row": 5, "type": "end",     "label": "Tập đơn TO sẵn sàng\n→ mục 5.2 tích hợp xuống WMS"}
   ],
   "edges": [
     {"from": "s0", "to": "s1", "label": ""},
     {"from": "s1", "to": "s2", "label": ""},
     {"from": "s2", "to": "s3", "label": ""},
-    {"from": "s3", "to": "s6", "label": ""},
-    {"from": "s6", "to": "s7", "label": ""},
+    {"from": "s3", "to": "s7", "label": ""},
     {"from": "s7", "to": "s8", "label": ""}
   ]
 }

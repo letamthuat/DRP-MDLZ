@@ -154,6 +154,19 @@ Giao diện phải tôn trọng ma trận quyền — nút/thao tác ẩn hoặc
 - **Gợi ý thiết kế:** Tô đỏ ô lỗi & cho nhảy tới dòng lỗi; nút Phân bổ disable khi còn lỗi; hiển thị tổng số dòng hợp lệ/lỗi.
 - **Tham chiếu nghiệp vụ:** mục 3.4. _(Truy vết: BR-001, BR-002, BR-006; NFR-03/08; EX-06.)_
 
+### [[MH-3.5: Màn hình Tồn kho WMS (đồng bộ & tra cứu tồn theo lô)]]
+- **Hệ thống / nền tảng:** Module — Web. Vai trò: Admin FML / Planner MDLZ (R + bấm đồng bộ tay); hệ thống tự đồng bộ định kỳ.
+- **Mục đích màn hình:** Hiển thị bản tồn đồng bộ từ WMS (nguồn tồn cho phân bổ ở mục 4); cho đồng bộ tự động 15 phút/lần hoặc thủ công, và tra cứu tồn theo SKU / lô / vị trí / trạng thái.
+- **Bố cục tổng thể:** Thanh đồng bộ trên cùng (mốc đồng bộ lần cuối · công tắc tự động 15 phút · nút đồng bộ tay có spinner) + thẻ tổng hợp (tổng pallet · tổng SKU · số lô cận hạn) + thanh bộ lọc (tìm SKU/tên, lọc trạng thái) + bảng tồn theo lô.
+- **Thành phần & trường chính:**
+  - **Thanh đồng bộ** — "Đồng bộ lần cuối: DD/MM/YYYY HH:mm" (chấm xanh), công tắc **Tự động 15 phút** (bật/tắt), nút **Đồng bộ ngay** (đang đồng bộ → spinner ~1.5s rồi cập nhật mốc).
+  - **Bảng tồn** — cột: Kho, Mã hàng (SKU), Tên hàng, Mã lô (`LOTTABLE01`), Vị trí (Dãy.Bay.Tầng), Pallet ID, Trạng thái (`STATUS`), Số pallet, **Khả dụng** (0 nếu trạng thái không cho lấy), **% hạn dùng còn lại** (thanh màu: đỏ <35 · vàng <60 · xanh), Ngày nhận.
+  - **Thẻ tổng hợp** — tổng pallet · tổng SKU · số lô cận hạn (% hạn dùng thấp).
+  - **Chip trạng thái** theo bảng màu: OK/0001_OK = xanh (khả dụng); EXPORT = xanh dương; GTDC/HOLD = vàng; BLOCKED/EXPIRED/DAMAGE = đỏ (khả dụng = 0).
+- **Trạng thái / biến thể:** Có dữ liệu; đang đồng bộ (spinner + disable nút); đồng bộ lỗi (thông báo + nút thử lại); rỗng (chưa đồng bộ lần nào); lọc không có kết quả.
+- **Gợi ý thiết kế:** Nêu rõ độ tươi dữ liệu (mốc đồng bộ lần cuối) để người dùng biết nên đồng bộ tay trước khi phân bổ; đánh dấu lô cận hạn nổi bật; dòng khả dụng = 0 làm mờ.
+- **Tham chiếu nghiệp vụ:** mục 3.5, 4.1. _(Truy vết: BR-007, BR-008, BR-011; NFR-04; OQ-11.)_
+
 ### [[MH-4.1: Màn hình kết quả phân bổ batch — tách theo kho lấy hàng, đơn TO & chi tiết TO]]
 - **Hệ thống / nền tảng:** Module — Web (chức năng Phân bổ). Phân bổ là **đề xuất tự động của hệ thống** (chưa phải lệnh thực thi — cần duyệt mới chuyển tích hợp).
 - **Mục đích màn hình:** Sau khi chạy phân bổ, hiển thị kết quả **đã tách sẵn theo kho lấy hàng (kho nguồn) và gom thành đơn chuyển kho (TO) kèm chi tiết từng dòng** — người dùng thấy ngay mỗi dòng kế hoạch lấy ở kho nào, thành những đơn TO nào, và đọc được **vì sao mỗi lô được chọn**.

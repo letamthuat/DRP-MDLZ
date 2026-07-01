@@ -6,9 +6,11 @@
     {"id": "a1",    "lane": 0, "row": 1, "type": "process",  "label": "Bước 1. Tải file kế hoạch\nchuyển kho lên"},
     {"id": "a2",    "lane": 1, "row": 2, "type": "process",  "label": "Bước 2. Kiểm tra cấu trúc\n& tính hợp lệ"},
     {"id": "a3",    "lane": 1, "row": 3, "type": "decision", "label": "Bước 3. Kế hoạch\nhợp lệ?"},
-    {"id": "a4",    "lane": 1, "row": 4, "type": "process",  "label": "Bước 4. Phân bổ batch theo chiến thuật\n& luồng (duyệt break-FEFO khi cần)"},
-    {"id": "a8",    "lane": 1, "row": 5, "type": "process",  "label": "Bước 5. Gom SKU gần nhau\n& tạo đơn chuyển kho (TO)"},
-    {"id": "end",   "lane": 1, "row": 6, "type": "end",      "label": "Sang khâu\ntích hợp TO"}
+    {"id": "a4",    "lane": 1, "row": 4, "type": "process",  "label": "Bước 4. Phân bổ batch theo\nchiến thuật & luồng"},
+    {"id": "a5",    "lane": 0, "row": 5, "type": "process",  "label": "Bước 5. Rà soát &\nđiều chỉnh phương án"},
+    {"id": "a6",    "lane": 1, "row": 6, "type": "decision", "label": "Bước 6. Đủ tồn?"},
+    {"id": "a7",    "lane": 1, "row": 7, "type": "process",  "label": "Bước 7. Gom SKU gần nhau\n& tạo đơn chuyển kho (TO)"},
+    {"id": "end",   "lane": 1, "row": 8, "type": "end",      "label": "Sang khâu\ntích hợp TO"}
   ],
   "edges": [
     {"from": "start", "to": "a1", "label": ""},
@@ -16,7 +18,10 @@
     {"from": "a2", "to": "a3", "label": ""},
     {"from": "a3", "to": "a1", "label": "Không"},
     {"from": "a3", "to": "a4", "label": "Có"},
-    {"from": "a4", "to": "a8", "label": ""},
-    {"from": "a8", "to": "end", "label": ""}
+    {"from": "a4", "to": "a5", "label": ""},
+    {"from": "a5", "to": "a6", "label": ""},
+    {"from": "a6", "to": "a5", "label": "Chưa đủ"},
+    {"from": "a6", "to": "a7", "label": "Đủ"},
+    {"from": "a7", "to": "end", "label": ""}
   ]
 }

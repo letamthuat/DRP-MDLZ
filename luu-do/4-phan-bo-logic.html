@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<style>body{margin:0;padding:0;background:#fff;}</style>
+</head><body>
+<svg xmlns="http://www.w3.org/2000/svg" width="670" height="1711"
+     style="font-family:Times New Roman, serif">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#444444"/></marker></defs>
+<rect x="0" y="0" width="670" height="48" fill="#176bb4"/>
+<text x="335" y="30" text-anchor="middle" font-family="Times New Roman, serif" font-size="24" font-weight="bold" fill="white">Logic phân bổ lô theo luồng &amp; chiến thuật</text>
+<rect x="20" y="48" width="305" height="56" fill="#eef1f5" stroke="none"/>
+<text x="172" y="81" text-anchor="middle" font-family="Times New Roman, serif" font-size="18" font-weight="bold" fill="#222">Hệ thống (Module)</text>
+<rect x="325" y="48" width="305" height="56" fill="#eef1f5" stroke="none"/>
+<text x="477" y="81" text-anchor="middle" font-family="Times New Roman, serif" font-size="18" font-weight="bold" fill="#222">Người dùng (Planner MDLZ)</text>
+<rect x="20" y="104" width="305" height="1607" fill="#ffffff" stroke="none"/>
+<rect x="325" y="104" width="305" height="1607" fill="#ffffff" stroke="none"/>
+<line x1="20" y1="104" x2="630" y2="104" stroke="#9e9e9e" stroke-width="1"/>
+<line x1="20" y1="48" x2="20" y2="1711" stroke="#9e9e9e" stroke-width="1"/>
+<line x1="325" y1="48" x2="325" y2="1711" stroke="#9e9e9e" stroke-width="1"/>
+<line x1="630" y1="48" x2="630" y2="1711" stroke="#9e9e9e" stroke-width="1"/>
+<rect x="0" y="0" width="670" height="1711" fill="none" stroke="#888" stroke-width="1.5"/>
+<line x1="172" y1="267" x2="172" y2="320" stroke="#444444" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="172" y1="444" x2="172" y2="495" stroke="#444444" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="172" y1="619" x2="172" y2="662" stroke="#444444" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="172" y1="802" x2="172" y2="837" stroke="#444444" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="178" y="819" font-family="Times New Roman, serif" font-size="14" fill="#555">Có</text>
+<polyline points="54,732 30,732 30,1607 60,1607" fill="none" stroke="#444444" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="50" y="726" text-anchor="end" font-family="Times New Roman, serif" font-size="14" fill="#555">Không</text>
+<line x1="172" y1="977" x2="172" y2="1370" stroke="#444444" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="178" y="1173" font-family="Times New Roman, serif" font-size="14" fill="#555">Không</text>
+<polyline points="290,907 477,907 477,1020" fill="none" stroke="#444444" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrow)"/>
+<text x="383" y="902" text-anchor="middle" font-family="Times New Roman, serif" font-size="14" fill="#555">Có</text>
+<line x1="477" y1="1144" x2="477" y2="1187" stroke="#444444" stroke-width="1.5" marker-end="url(#arrow)"/>
+<polyline points="359,1257 172,1257 172,1370" fill="none" stroke="#444444" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrow)"/>
+<text x="265" y="1252" text-anchor="middle" font-family="Times New Roman, serif" font-size="14" fill="#555">Được</text>
+<line x1="477" y1="1327" x2="477" y2="1370" stroke="#444444" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="483" y="1348" font-family="Times New Roman, serif" font-size="14" fill="#555">Từ chối</text>
+<line x1="342" y1="1432" x2="307" y2="1432" stroke="#444444" stroke-width="1.5" stroke-dasharray="6,3"/>
+<line x1="172" y1="1494" x2="172" y2="1547" stroke="#444444" stroke-width="1.5" marker-end="url(#arrow)"/>
+<ellipse cx="172" cy="207" rx="112" ry="60" fill="#176bb4" stroke="#333333" stroke-width="1.5"/>
+<text x="172" y="189" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="bold" fill="white">Dòng kế hoạch</text>
+<text x="172" y="212" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="bold" fill="white">(SKU, số lượng +</text>
+<text x="172" y="235" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="bold" fill="white">đơn vị)</text>
+<rect x="37" y="320" width="270" height="124" rx="6" ry="6" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="172" y="353" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">Bước 1. Xác định kho lấy</text>
+<text x="172" y="376" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">theo luồng</text>
+<text x="172" y="399" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">(bậc ưu tiên &amp; kho mỗi</text>
+<text x="172" y="422" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">bậc — mục 2.4)</text>
+<rect x="37" y="495" width="270" height="124" rx="6" ry="6" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="172" y="528" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">Bước 2. Chọn lô ở bậc ưu</text>
+<text x="172" y="551" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">tiên cao nhất</text>
+<text x="172" y="574" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">theo chiến thuật; thiếu</text>
+<text x="172" y="597" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">thì sang bậc kế</text>
+<polygon points="172,662 290,732 172,802 54,732" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="172" y="725" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">Đủ tồn</text>
+<text x="172" y="748" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">qua các bậc?</text>
+<polygon points="172,837 290,907 172,977 54,907" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="172" y="889" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">BKD1 còn batch</text>
+<text x="172" y="912" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">cũ hơn?</text>
+<text x="172" y="935" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">(chỉ In-Ex BKD)</text>
+<rect x="342" y="1020" width="270" height="124" rx="6" ry="6" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="477" y="1075" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">Cảnh báo break FEFO,</text>
+<text x="477" y="1098" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">chờ Planner duyệt</text>
+<polygon points="477,1187 595,1257 477,1327 359,1257" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="477" y="1261" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">Được duyệt?</text>
+<rect x="342" y="1370" width="270" height="124" rx="6" ry="6" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="477" y="1436" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">Chọn lô khác</text>
+<rect x="37" y="1370" width="270" height="124" rx="6" ry="6" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="172" y="1436" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">Phân bổ hoàn chỉnh</text>
+<ellipse cx="172" cy="1607" rx="112" ry="60" fill="#444" stroke="#333333" stroke-width="1.5"/>
+<text x="172" y="1611" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="bold" fill="white">Kết thúc</text>
+</svg>
+</body></html>

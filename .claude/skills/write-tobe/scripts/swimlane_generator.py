@@ -184,13 +184,30 @@ def build_html(data: dict) -> str:
 
         r_from = row_assigned.get(fid, 0)
         r_to   = row_assigned.get(tid, 0)
-        is_back = r_to <= r_from
+        is_back = r_to < r_from
 
         cx_f, cy_f = node_cx(fn), node_cy(fid)
         cx_t, cy_t = node_cx(tn), node_cy(tid)
         same_lane = fn.get("lane") == tn.get("lane")
         # nét liền nếu trong cùng lane; nét đứt nếu mũi tên đi sang lane khác
         dash = "" if same_lane else ' stroke-dasharray="6,3"'
+
+        # định tuyến theo mép trái: ra cạnh trái node nguồn → xuống lề trái → vào cạnh trái node đích
+        if edge.get("route") == "left":
+            sx, sy = conn_left(fn, fid)
+            tex, tey = conn_left(tn, tid)
+            ox = 30
+            mk = '' if edge.get("no_arrow") else ' marker-end="url(#arrow)"'
+            svgs.append(
+                f'<polyline points="{sx},{sy} {ox},{sy} {ox},{tey} {tex},{tey}" '
+                f'fill="none" stroke="{ARROW_COLOR}" stroke-width="1.5"{dash}{mk}/>'
+            )
+            if lbl:
+                svgs.append(
+                    f'<text x="{sx - 4}" y="{sy - 6}" text-anchor="end" '
+                    f'font-family="{FONT}" font-size="14" fill="#555">{lbl}</text>'
+                )
+            continue
 
         if is_back:
             # vòng lặp: ra cạnh phải node nguồn → vòng bên phải → đi trong khoảng trống
@@ -243,9 +260,10 @@ def build_html(data: dict) -> str:
 
             if r_from == r_to:
                 # cùng row → đường thẳng ngang
+                mk = '' if edge.get("no_arrow") else ' marker-end="url(#arrow)"'
                 svgs.append(
                     f'<line x1="{sx}" y1="{sy}" x2="{ex}" y2="{ey}" '
-                    f'stroke="{ARROW_COLOR}" stroke-width="1.5"{dash} marker-end="url(#arrow)"/>'
+                    f'stroke="{ARROW_COLOR}" stroke-width="1.5"{dash}{mk}/>'
                 )
                 if lbl:
                     mx = (sx + ex) // 2

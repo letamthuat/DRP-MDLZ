@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<style>body{margin:0;padding:0;background:#fff;}</style>
+</head><body>
+<svg xmlns="http://www.w3.org/2000/svg" width="975" height="1361"
+     style="font-family:Times New Roman, serif">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#444444"/></marker></defs>
+<rect x="0" y="0" width="975" height="48" fill="#176bb4"/>
+<text x="487" y="30" text-anchor="middle" font-family="Times New Roman, serif" font-size="24" font-weight="bold" fill="white">Đồng bộ &amp; xem tồn kho từ WMS</text>
+<rect x="20" y="48" width="305" height="56" fill="#eef1f5" stroke="none"/>
+<text x="172" y="81" text-anchor="middle" font-family="Times New Roman, serif" font-size="18" font-weight="bold" fill="#222">Người dùng / Lịch tự động</text>
+<rect x="325" y="48" width="305" height="56" fill="#eef1f5" stroke="none"/>
+<text x="477" y="81" text-anchor="middle" font-family="Times New Roman, serif" font-size="18" font-weight="bold" fill="#222">Hệ thống (Module)</text>
+<rect x="630" y="48" width="305" height="56" fill="#eef1f5" stroke="none"/>
+<text x="782" y="81" text-anchor="middle" font-family="Times New Roman, serif" font-size="18" font-weight="bold" fill="#222">WMS</text>
+<rect x="20" y="104" width="305" height="1257" fill="#ffffff" stroke="none"/>
+<rect x="325" y="104" width="305" height="1257" fill="#ffffff" stroke="none"/>
+<rect x="630" y="104" width="305" height="1257" fill="#ffffff" stroke="none"/>
+<line x1="20" y1="104" x2="935" y2="104" stroke="#9e9e9e" stroke-width="1"/>
+<line x1="20" y1="48" x2="20" y2="1361" stroke="#9e9e9e" stroke-width="1"/>
+<line x1="325" y1="48" x2="325" y2="1361" stroke="#9e9e9e" stroke-width="1"/>
+<line x1="630" y1="48" x2="630" y2="1361" stroke="#9e9e9e" stroke-width="1"/>
+<line x1="935" y1="48" x2="935" y2="1361" stroke="#9e9e9e" stroke-width="1"/>
+<rect x="0" y="0" width="975" height="1361" fill="none" stroke="#888" stroke-width="1.5"/>
+<line x1="172" y1="267" x2="172" y2="320" stroke="#444444" stroke-width="1.5" marker-end="url(#arrow)"/>
+<polyline points="307,382 477,382 477,495" fill="none" stroke="#444444" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrow)"/>
+<polyline points="612,557 782,557 782,670" fill="none" stroke="#444444" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrow)"/>
+<polyline points="647,732 477,732 477,845" fill="none" stroke="#444444" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrow)"/>
+<line x1="477" y1="969" x2="477" y2="1020" stroke="#444444" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="477" y1="1144" x2="477" y2="1197" stroke="#444444" stroke-width="1.5" marker-end="url(#arrow)"/>
+<ellipse cx="172" cy="207" rx="112" ry="60" fill="#176bb4" stroke="#333333" stroke-width="1.5"/>
+<text x="172" y="200" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="bold" fill="white">Kích hoạt đồng</text>
+<text x="172" y="223" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="bold" fill="white">bộ</text>
+<rect x="37" y="320" width="270" height="124" rx="6" ry="6" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="172" y="364" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">Bước 1. Tự động 15</text>
+<text x="172" y="387" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">phút/lần</text>
+<text x="172" y="410" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">hoặc bấm đồng bộ tay</text>
+<rect x="342" y="495" width="270" height="124" rx="6" ry="6" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="477" y="539" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">Bước 2. Gọi API WMS lấy</text>
+<text x="477" y="562" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">tồn theo lô</text>
+<text x="477" y="585" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">của tất cả kho nguồn</text>
+<rect x="647" y="670" width="270" height="124" rx="6" ry="6" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="782" y="714" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">Trả tồn: SKU, lô, vị trí,</text>
+<text x="782" y="737" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">STATUS,</text>
+<text x="782" y="760" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">% hạn dùng, ngày nhận</text>
+<rect x="342" y="845" width="270" height="124" rx="6" ry="6" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="477" y="878" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">Bước 3. Xác định khả dụng</text>
+<text x="477" y="901" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">theo</text>
+<text x="477" y="924" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">trạng thái cho phép của</text>
+<text x="477" y="947" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">kho (mục 2.1)</text>
+<rect x="342" y="1020" width="270" height="124" rx="6" ry="6" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="477" y="1053" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">Bước 4. Cập nhật bản tồn</text>
+<text x="477" y="1076" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">(snapshot)</text>
+<text x="477" y="1099" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">&amp; ghi mốc đồng bộ lần</text>
+<text x="477" y="1122" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="normal" fill="#222">cuối</text>
+<ellipse cx="477" cy="1257" rx="112" ry="60" fill="#444" stroke="#333333" stroke-width="1.5"/>
+<text x="477" y="1250" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="bold" fill="white">Phân bổ (mục 4)</text>
+<text x="477" y="1273" text-anchor="middle" dominant-baseline="middle" font-family="Times New Roman, serif" font-size="20" font-weight="bold" fill="white">dùng bản tồn này</text>
+</svg>
+</body></html>
